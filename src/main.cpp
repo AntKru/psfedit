@@ -19,11 +19,26 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
     // get file size
-    std::ifstream readFile(filePath, std::ifstream::ate | std::ifstream::binary);
+    std::size_t fileSize = 0;
+    std::ifstream readFile(filePath, std::ifstream::binary);
     if (!readFile.is_open()) {
         std::println(stderr, "Could not open file {}", filePath.string());
         return EXIT_FAILURE;
     }
+    readFile.seekg(0, std::ifstream::end);
+    fileSize = readFile.tellg();
+    readFile.seekg(0, std::ifstream::beg);
+
+    // read file
+    char buffer[fileSize];
+    readFile.read(buffer, fileSize);
+
+    Psf psf(buffer, fileSize);
+    if (!psf.isValid()) {
+        std::println(stderr, "Invalid PSF file");
+        return EXIT_FAILURE;
+    }
+
     return EXIT_SUCCESS;
 }
 
