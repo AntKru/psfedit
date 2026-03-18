@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include <cstdint>
+#include <vector>
 
 class Psf {
     public:
         Psf(char* buffer, std::size_t size);
         bool isValid();
+        std::vector<std::vector<bool>> getGlyph(unsigned short int code);
 
     private:
         char* m_buffer;

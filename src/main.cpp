@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "psf.h"
+#include "ui.h"
 
 namespace fs = std::filesystem;
 
@@ -37,6 +38,19 @@ int main(int argc, char** argv) {
     if (!psf.isValid()) {
         std::println(stderr, "Invalid PSF file");
         return EXIT_FAILURE;
+    }
+
+    std::pair<Command, unsigned short int> command = {Command::COMMAND_SIZE, 0};
+    command = getCommand();
+    while (command.first != Command::EXIT) {
+        switch (command.first) {
+            case Command::SHOW:
+                showGlyph(psf.getGlyph(command.second));
+                break;
+            default:
+                std::println("Could not handle command {}", static_cast<int>(command.first));
+        }
+        command = getCommand();
     }
 
     return EXIT_SUCCESS;
