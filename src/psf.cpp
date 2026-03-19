@@ -35,9 +35,9 @@ std::vector<std::vector<bool>> Psf::getGlyph(unsigned short int code) {
     }
     std::vector<std::vector<bool>> glyphVec;
     // calculate glyph pointer
-    unsigned int bytesPerGlyphLine = (m_header->width + 7) / 8;
-    unsigned char* glyph = (unsigned char*)m_buffer + m_header->headersize + code * m_header->bytesperglyph;
-    if ((std::size_t)(glyph - (unsigned char*)m_buffer) + m_header->bytesperglyph > m_size) {
+    const unsigned int bytesPerGlyphLine = (m_header->width + 7) / 8;
+    unsigned char* glyph = getGlyphPointer(code);
+    if (!glyph) {
         throw std::out_of_range("Code outside of this file!");
     }
     for (std::size_t y = 0; y < m_header->height; y++) {
@@ -55,5 +55,44 @@ std::vector<std::vector<bool>> Psf::getGlyph(unsigned short int code) {
         glyphVec.push_back(line);
     }
     return glyphVec;
+}
+
+bool Psf::setGlyph(unsigned short int code, const std::vector<std::vector<bool>>& glyphVec) {
+    if (code >= m_header->numglyph) {
+        return false;
+    }
+    unsigned char* glyph = getGlyphPointer(code);
+    if (!glyph){
+        return false;
+    }
+    size_t i = 0;
+    std::uint8_t mask = 1 << 7;
+    for (std::vector<bool> byteVec : glyphVec) {
+        for (bool bit : byteVec) {
+            if (i < m_header->bytesperglyph) {
+                if (bit) {
+                    *(glyph + i) |= mask;
+                } else {
+                    *(glyph + i) &= ~mask;
+                }
+                mask >>= 1;
+                if (mask == 0) {
+                    mask = 1 << 7;
+                    i++;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+    return true;
+}
+
+unsigned char* Psf::getGlyphPointer(unsigned short int code) {
+    unsigned char* glyph = (unsigned char*)m_buffer + m_header->headersize + code * m_header->bytesperglyph;
+    if ((std::size_t)(glyph - (unsigned char*)m_buffer) + m_header->bytesperglyph > m_size) {
+        return nullptr;
+    }
+    return glyph;
 }
 

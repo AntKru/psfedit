@@ -8,6 +8,7 @@ class Psf {
         Psf(char* buffer, std::size_t size);
         bool isValid();
         std::vector<std::vector<bool>> getGlyph(unsigned short int code);
+        bool setGlyph(unsigned short int code, const std::vector<std::vector<bool>>& glyphVec);
 
     private:
         char* m_buffer;
@@ -25,5 +26,7 @@ class Psf {
         };
 
         PsfHeader* m_header;
+
+        unsigned char* getGlyphPointer(unsigned short int code);
 };
 
