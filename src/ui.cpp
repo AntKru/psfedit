@@ -32,7 +32,7 @@ std::pair<Command, unsigned short int> getCommand() {
 void showGlyph(const std::vector<std::vector<bool>>& glyph) {
     for (const std::vector<bool>& line : glyph) {
         for (const bool fg : line) {
-            std::cout << (fg ? "\033[7m \033[0m" : " ");
+            std::cout << (fg ? "\033[7m· \033[0m" : "· ");
         }
         std::cout << std::endl;
     }

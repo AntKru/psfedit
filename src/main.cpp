@@ -45,7 +45,11 @@ int main(int argc, char** argv) {
     while (command.first != Command::EXIT) {
         switch (command.first) {
             case Command::SHOW:
+                try {
                 showGlyph(psf.getGlyph(command.second));
+                } catch (std::out_of_range& e) {
+                    std::println("Failed to get glyph: {}", e.what());
+                }
                 break;
             default:
                 std::println("Could not handle command {}", static_cast<int>(command.first));

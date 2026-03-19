@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+#include <stdexcept>
+
 #include "psf.h"
 
 #define PSF_MAGIC 0x864ab572
@@ -28,10 +30,16 @@ bool Psf::isValid() {
 }
 
 std::vector<std::vector<bool>> Psf::getGlyph(unsigned short int code) {
+    if (code >= m_header->numglyph) {
+        throw std::out_of_range("Code not included in this font!");
+    }
     std::vector<std::vector<bool>> glyphVec;
     // calculate glyph pointer
-    unsigned char* glyph = (unsigned char*)m_buffer + m_header->headersize + code * m_header->bytesperglyph;
     unsigned int bytesPerGlyphLine = (m_header->width + 7) / 8;
+    unsigned char* glyph = (unsigned char*)m_buffer + m_header->headersize + code * m_header->bytesperglyph;
+    if ((std::size_t)(glyph - (unsigned char*)m_buffer) + m_header->bytesperglyph > m_size) {
+        throw std::out_of_range("Code outside of this file!");
+    }
     for (std::size_t y = 0; y < m_header->height; y++) {
         std::vector<bool> line;
         unsigned char* currentByte = glyph + (y * bytesPerGlyphLine);
