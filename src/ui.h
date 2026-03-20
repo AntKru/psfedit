@@ -12,4 +12,5 @@ enum class Command {
 
 std::pair<Command, unsigned short int> getCommand();
 void showGlyph(const std::vector<std::vector<bool>>& glyph);
+std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& glyph);
 

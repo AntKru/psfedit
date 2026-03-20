@@ -41,12 +41,18 @@ int main(int argc, char** argv) {
     }
 
     std::pair<Command, unsigned short int> command = {Command::COMMAND_SIZE, 0};
-    command = getCommand();
-    while (command.first != Command::EXIT) {
+    while ((command = getCommand()).first != Command::EXIT) {
         switch (command.first) {
             case Command::SHOW:
                 try {
-                showGlyph(psf.getGlyph(command.second));
+                    showGlyph(psf.getGlyph(command.second));
+                } catch (std::out_of_range& e) {
+                    std::println("Failed to get glyph: {}", e.what());
+                }
+                break;
+            case Command::EDIT:
+                try {
+                    psf.setGlyph(command.second, editGlyph(psf.getGlyph(command.second)));
                 } catch (std::out_of_range& e) {
                     std::println("Failed to get glyph: {}", e.what());
                 }
@@ -54,7 +60,6 @@ int main(int argc, char** argv) {
             default:
                 std::println("Could not handle command {}", static_cast<int>(command.first));
         }
-        command = getCommand();
     }
 
     return EXIT_SUCCESS;
