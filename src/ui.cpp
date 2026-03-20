@@ -15,9 +15,12 @@ std::pair<Command, unsigned short int> getCommand() {
         if (command == "h") {
             std::println("Available commands:");
             std::println("h: show this help");
-            std::println("e: exit");
+            std::println("w: save");
+            std::println("e: exit (Does not save automatically!)");
             std::println("s [character code]: show character");
             std::println("m [character code]: modify character");
+        } else if (command == "w") {
+            return {Command::SAVE, 0};
         } else if (command == "e") {
             return {Command::EXIT, 0};
         } else if (command == "s" || command == "m") {

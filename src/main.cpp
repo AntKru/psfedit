@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
     // read file
     char buffer[fileSize];
     readFile.read(buffer, fileSize);
+    readFile.close();
 
     Psf psf(buffer, fileSize);
     if (!psf.isValid()) {
@@ -55,6 +56,12 @@ int main(int argc, char** argv) {
                     psf.setGlyph(command.second, editGlyph(psf.getGlyph(command.second)));
                 } catch (std::out_of_range& e) {
                     std::println("Failed to get glyph: {}", e.what());
+                }
+                break;
+            case Command::SAVE:
+                {
+                    std::ofstream writeFile(filePath);
+                    writeFile.write(buffer, fileSize);
                 }
                 break;
             default:

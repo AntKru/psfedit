@@ -6,6 +6,7 @@
 enum class Command {
     SHOW,
     EDIT,
+    SAVE,
     EXIT,
     COMMAND_SIZE,
 };
