@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <limits>
 
 class Psf {
     public:
@@ -13,6 +14,7 @@ class Psf {
     private:
         char* m_buffer;
         std::size_t m_size;
+        uint16_t m_unicodeTable[std::numeric_limits<unsigned short>::max()];
 
         struct PsfHeader {
             uint32_t magic;
@@ -27,6 +29,7 @@ class Psf {
 
         PsfHeader* m_header;
 
+        void parseUnicodeTable();
         unsigned char* getGlyphPointer(unsigned short int code);
 };
 
