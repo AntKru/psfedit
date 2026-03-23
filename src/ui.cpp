@@ -2,6 +2,9 @@
 
 #include <print>
 #include <iostream>
+#include <sstream>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #include "ui.h"
 
@@ -9,9 +12,16 @@ void printGlyphLine(const std::vector<bool>& line, bool highlight = false, bool 
 
 std::pair<Command, unsigned short int> getCommand() {
     while (true) {
-        std::print("type h for help> ");
+        char* line = readline("type h for help> ");
+        if (line == nullptr) {
+            return {Command::EXIT, 0};
+        }
+        if (*line) {
+            add_history(line);
+        }
+        std::istringstream lineStream(line);
         std::string command;
-        std::cin >> command;
+        lineStream >> command;
         if (command == "h") {
             std::println("Available commands:");
             std::println("h: show this help");
@@ -25,7 +35,7 @@ std::pair<Command, unsigned short int> getCommand() {
             return {Command::EXIT, 0};
         } else if (command == "s" || command == "m") {
             std::string number;
-            std::cin >> number;
+            lineStream >> number;
             try {
                 return {
                     command == "s" ? Command::SHOW : Command::EDIT,
@@ -83,7 +93,10 @@ std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& g
             std::cout << '\n';
         }
 
-        std::cout << ' ';
+        const std::string prompt = "Editing mode> ";
+        for (size_t i = 0; i < prompt.size(); i++) {
+            std::cout << ' ';
+        }
         for (size_t j = 0; j < newGlyph.at(i).size(); j++) {
             if (newGlyph.at(i).at(j)) {
                 std::cout << "\033[7m";
@@ -92,15 +105,22 @@ std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& g
             std::cout << "\033[0m";
         }
         std::cout << std::endl;
-        std::print(">");
-        std::string newLine;
-        std::getline(std::cin >> std::ws, newLine);
+        char* line = readline(prompt.c_str());
+        if (line == nullptr) {
+            // do not save changes
+            return glyph;
+        }
+        if (*line) {
+            add_history(line);
+        }
+        std::string newLine(line);
         for (size_t j = 0; j < newGlyph.at(i).size(); j++) {
             if (j == newLine.size() || newLine.at(j) == 's') {
                 std::println("Skipping");
                 break;
             }
             if (newLine.at(j) == 'e') {
+                // do not save changes
                 return glyph;
             }
             newGlyph.at(i).at(j) = newLine.at(j) == 'x';

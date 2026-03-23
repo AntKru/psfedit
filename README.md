@@ -3,6 +3,10 @@
 A psf editor and viewer.
 
 ## Building
+Requirements:
+ - meson
+ - C++ compiler with support for C++23
+ - GNU readline library
 ```sh
 meson setup build
 cd build
