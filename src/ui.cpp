@@ -5,7 +5,7 @@
 
 #include "ui.h"
 
-void printGlyphLine(const std::vector<bool>& line, bool highlight = false);
+void printGlyphLine(const std::vector<bool>& line, bool highlight = false, bool shrink = false);
 
 std::pair<Command, unsigned short int> getCommand() {
     while (true) {
@@ -39,8 +39,9 @@ std::pair<Command, unsigned short int> getCommand() {
 }
 
 void showGlyph(const std::vector<std::vector<bool>>& glyph) {
-    for (const std::vector<bool>& line : glyph) {
-        printGlyphLine(line);
+    const bool shrink = glyph.at(0).size() > 32;
+    for (size_t i = 0; i < glyph.size(); i += 1 + shrink) {
+        printGlyphLine(glyph.at(i), false, shrink);
         std::cout << std::endl;
     }
 }
@@ -61,14 +62,24 @@ std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& g
         showHelp = false;
     }
     auto newGlyph = glyph;
+    const bool shrink = glyph.at(0).size() > 32;
+    if (shrink) {
+        std::println("Warning: this view has a lower resolution than the original, but you can still edit the full resolution.");
+        std::println("Please rely on the equal signs.");
+    }
     for (size_t i = 0; i < glyph.size(); i++) {
         // Show new and old character
-        for (size_t j = 0; j < glyph.size(); j++) {
-            std::cout << (j == i ? "*" : " ");
-            printGlyphLine(glyph.at(j), j == i);
-            std::cout << ' ';
-            std::cout << (j == i ? "*" : " ");
-            printGlyphLine(newGlyph.at(j), j == i);
+        for (size_t j = 0; j < glyph.size(); j += 1 + shrink) {
+            if (!shrink) {
+                std::cout << (j == i ? "*" : " ");
+                printGlyphLine(glyph.at(j), j == i);
+                std::cout << ' ';
+                std::cout << (j == i ? "*" : " ");
+                printGlyphLine(newGlyph.at(j), j == i);
+            } else {
+                std::cout << (j == i || j + 1 == i ? "*" : " ");
+                printGlyphLine(newGlyph.at(j), j == i || j + 1 == i, shrink);
+            }
             std::cout << '\n';
         }
 
@@ -98,12 +109,16 @@ std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& g
     return newGlyph;
 }
 
-void printGlyphLine(const std::vector<bool>& line, bool highlight) {
+void printGlyphLine(const std::vector<bool>& line, bool highlight, bool shrink) {
     if (highlight) {
         std::cout << "\033[32m";
     }
     for (const bool fg : line) {
-        std::cout << (fg ? "\033[7m· \033[27m" : "· ");
+        if (shrink) {
+            std::cout << (fg ? "\033[7m:\033[27m" : ":");
+        } else {
+            std::cout << (fg ? "\033[7m· \033[27m" : "· ");
+        }
     }
     std::cout << "\033[0m";
 }
