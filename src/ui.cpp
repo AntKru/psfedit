@@ -3,6 +3,7 @@
 #include <print>
 #include <iostream>
 #include <sstream>
+#include <vector>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -48,15 +49,19 @@ std::pair<Command, unsigned short int> getCommand() {
     }
 }
 
-void showGlyph(const std::vector<std::vector<bool>>& glyph) {
-    const bool shrink = glyph.at(0).size() > 32;
-    for (size_t i = 0; i < glyph.size(); i += 1 + shrink) {
-        printGlyphLine(glyph.at(i), false, shrink);
+void showGlyph(const Glyph& glyph) {
+    const bool shrink = glyph.getWidth() > 32;
+    for (size_t y = 0; y < glyph.getHeight(); y += 1 + shrink) {
+        std::vector<bool> line;
+        for (size_t x = 0; x < glyph.getWidth(); x++) {
+            line.push_back(glyph.getBit(x, y));
+        }
+        printGlyphLine(line, false, shrink);
         std::cout << std::endl;
     }
 }
 
-std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& glyph) {
+Glyph editGlyph(const Glyph& glyph) {
     static bool showHelp = true;
     if (showHelp) {
         std::print(
@@ -72,23 +77,29 @@ std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& g
         showHelp = false;
     }
     auto newGlyph = glyph;
-    const bool shrink = glyph.at(0).size() > 32;
+    const bool shrink = glyph.getWidth() > 32;
     if (shrink) {
         std::println("Warning: this view has a lower resolution than the original, but you can still edit the full resolution.");
         std::println("Please rely on the equal signs.");
     }
-    for (size_t i = 0; i < glyph.size(); i++) {
+    for (size_t i = 0; i < glyph.getHeight(); i++) {
         // Show new and old character
-        for (size_t j = 0; j < glyph.size(); j += 1 + shrink) {
+        for (size_t j = 0; j < glyph.getHeight(); j += 1 + shrink) {
+            std::vector<bool> oldLine;
+            std::vector<bool> newLine;
+            for (size_t x = 0; x < glyph.getWidth(); x++) {
+                oldLine.push_back(glyph.getBit(x, j));
+                newLine.push_back(newGlyph.getBit(x, j));
+            }
             if (!shrink) {
                 std::cout << (j == i ? "*" : " ");
-                printGlyphLine(glyph.at(j), j == i);
+                printGlyphLine(oldLine, j == i);
                 std::cout << ' ';
                 std::cout << (j == i ? "*" : " ");
-                printGlyphLine(newGlyph.at(j), j == i);
+                printGlyphLine(newLine, j == i);
             } else {
                 std::cout << (j == i || j + 1 == i ? "*" : " ");
-                printGlyphLine(newGlyph.at(j), j == i || j + 1 == i, shrink);
+                printGlyphLine(newLine, j == i || j + 1 == i, shrink);
             }
             std::cout << '\n';
         }
@@ -97,8 +108,9 @@ std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& g
         for (size_t i = 0; i < prompt.size(); i++) {
             std::cout << ' ';
         }
-        for (size_t j = 0; j < newGlyph.at(i).size(); j++) {
-            if (newGlyph.at(i).at(j)) {
+        // Show preview with (=)
+        for (size_t j = 0; j < newGlyph.getWidth(); j++) {
+            if (newGlyph.getBit(j, i)) {
                 std::cout << "\033[7m";
             }
             std::cout << '=';
@@ -114,7 +126,7 @@ std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& g
             add_history(line);
         }
         std::string newLine(line);
-        for (size_t j = 0; j < newGlyph.at(i).size(); j++) {
+        for (size_t j = 0; j < newGlyph.getWidth(); j++) {
             if (j == newLine.size() || newLine.at(j) == 's') {
                 std::println("Skipping");
                 break;
@@ -123,7 +135,7 @@ std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& g
                 // do not save changes
                 return glyph;
             }
-            newGlyph.at(i).at(j) = newLine.at(j) == 'x';
+            newGlyph.setBit(j, i, newLine.at(j) == 'x');
         }
     }
     return newGlyph;

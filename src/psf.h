@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: GPL-3.0-only
+#pragma once
 
 #include <cstdint>
-#include <vector>
 #include <limits>
+
+#include "glyph.h"
 
 class Psf {
     public:
         Psf(char* buffer, std::size_t size);
         bool isValid();
-        std::vector<std::vector<bool>> getGlyph(unsigned short int code);
-        bool setGlyph(unsigned short int code, const std::vector<std::vector<bool>>& glyphVec);
+        Glyph getGlyph(unsigned short int code);
+        bool setGlyph(unsigned short int code, const Glyph& glyph);
 
     private:
         char* m_buffer;

@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
+#pragma once
 
 #include <utility>
-#include <vector>
+
+#include "glyph.h"
 
 enum class Command {
     SHOW,
@@ -12,6 +14,6 @@ enum class Command {
 };
 
 std::pair<Command, unsigned short int> getCommand();
-void showGlyph(const std::vector<std::vector<bool>>& glyph);
-std::vector<std::vector<bool>> editGlyph(const std::vector<std::vector<bool>>& glyph);
+void showGlyph(const Glyph& glyph);
+Glyph editGlyph(const Glyph& glyph);
 
