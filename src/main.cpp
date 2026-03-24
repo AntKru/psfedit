@@ -41,24 +41,25 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    std::pair<Command, unsigned short int> command = {Command::COMMAND_SIZE, 0};
-    while ((command = getCommand()).first != Command::EXIT) {
+    UI ui;
+    std::pair<UI::Command, unsigned short int> command = {UI::Command::COMMAND_SIZE, 0};
+    while ((command = ui.getCommand()).first != UI::Command::EXIT) {
         switch (command.first) {
-            case Command::SHOW:
+            case UI::Command::SHOW:
                 try {
-                    showGlyph(psf.getGlyph(command.second));
+                    UI::showGlyph(psf.getGlyph(command.second));
                 } catch (std::out_of_range& e) {
                     std::println("Failed to get glyph: {}", e.what());
                 }
                 break;
-            case Command::EDIT:
+            case UI::Command::EDIT:
                 try {
-                    psf.setGlyph(command.second, editGlyph(psf.getGlyph(command.second)));
+                    psf.setGlyph(command.second, UI::editGlyph(psf.getGlyph(command.second)));
                 } catch (std::out_of_range& e) {
                     std::println("Failed to get glyph: {}", e.what());
                 }
                 break;
-            case Command::SAVE:
+            case UI::Command::SAVE:
                 {
                     std::ofstream writeFile(filePath);
                     writeFile.write(buffer, fileSize);

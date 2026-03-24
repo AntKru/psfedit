@@ -11,7 +11,8 @@
 
 void printGlyphLine(const std::vector<bool>& line, bool highlight = false, bool shrink = false);
 
-std::pair<Command, unsigned short int> getCommand() {
+std::pair<UI::Command, unsigned short int> UI::getCommand() {
+    rl_attempted_completion_function = UI::menuCompletion;
     while (true) {
         char* line = readline("type h for help> ");
         if (line == nullptr) {
@@ -21,35 +22,36 @@ std::pair<Command, unsigned short int> getCommand() {
             add_history(line);
         }
         std::istringstream lineStream(line);
+        delete line;
         std::string command;
         lineStream >> command;
-        if (command == "h") {
-            std::println("Available commands:");
-            std::println("h: show this help");
-            std::println("w: save");
-            std::println("e: exit (Does not save automatically!)");
-            std::println("s [character code]: show character");
-            std::println("m [character code]: modify character");
-        } else if (command == "w") {
+        if (command == "h" || command == "help") {
+            for (const auto& [command, helpMessage] : menuCommands) {
+                std::println("{}", helpMessage);
+            }
+        } else if (command == "w" || command == "write") {
             return {Command::SAVE, 0};
-        } else if (command == "e") {
+        } else if (command == "e" || command == "exit") {
             return {Command::EXIT, 0};
-        } else if (command == "s" || command == "m") {
+        } else if (command == "s" || command == "m"
+                || command == "show" || command == "modify") {
             std::string number;
             lineStream >> number;
             try {
                 return {
-                    command == "s" ? Command::SHOW : Command::EDIT,
+                    (command == "s" || command == "show") ? Command::SHOW : Command::EDIT,
                     stoi(number)
                 };
             } catch (const std::exception& e) {
                 std::println(stderr, "Invalid number: {}", number);
             }
+        } else {
+            std::println("Unknown command: {}", command);
         }
     }
 }
 
-void showGlyph(const Glyph& glyph) {
+void UI::showGlyph(const Glyph& glyph) {
     const bool shrink = glyph.getWidth() > 32;
     for (size_t y = 0; y < glyph.getHeight(); y += 1 + shrink) {
         std::vector<bool> line;
@@ -61,7 +63,8 @@ void showGlyph(const Glyph& glyph) {
     }
 }
 
-Glyph editGlyph(const Glyph& glyph) {
+Glyph UI::editGlyph(const Glyph& glyph) {
+    rl_attempted_completion_function = UI::editorCompletion;
     static bool showHelp = true;
     if (showHelp) {
         std::print(
@@ -126,6 +129,7 @@ Glyph editGlyph(const Glyph& glyph) {
             add_history(line);
         }
         std::string newLine(line);
+        delete line;
         for (size_t j = 0; j < newGlyph.getWidth(); j++) {
             if (j == newLine.size() || newLine.at(j) == 's') {
                 std::println("Skipping");
@@ -141,7 +145,7 @@ Glyph editGlyph(const Glyph& glyph) {
     return newGlyph;
 }
 
-void printGlyphLine(const std::vector<bool>& line, bool highlight, bool shrink) {
+void UI::printGlyphLine(const std::vector<bool>& line, bool highlight, bool shrink) {
     if (highlight) {
         std::cout << "\033[32m";
     }
@@ -154,4 +158,42 @@ void printGlyphLine(const std::vector<bool>& line, bool highlight, bool shrink) 
     }
     std::cout << "\033[0m";
 }
+
+char** UI::menuCompletion(const char* text, int start, int end) {
+    rl_attempted_completion_over = 1;
+    return rl_completion_matches(text, UI::menuCompletionGenerator);
+}
+
+char* UI::menuCompletionGenerator(const char* text, int state) {
+    static size_t index = 0;
+    static size_t length = 0;
+    if (state == 0) {
+        index = 0;
+        length = strlen(text);
+    }
+    while (index < UI::menuCommands.size()) {
+        std::string completedText = UI::menuCommands.at(index++).first;
+        if (strncmp(text, completedText.c_str(), length) == 0) {
+            return strdup(completedText.c_str());
+        }
+    }
+    return nullptr;
+}
+
+char** UI::editorCompletion(const char* text, int start, int end) {
+    rl_attempted_completion_over = 1;
+    return rl_completion_matches(text, UI::editorCompletionGenerator);
+}
+
+char* UI::editorCompletionGenerator(const char* text, int state) {
+    return nullptr;
+}
+
+const std::vector<std::pair<std::string, std::string>> UI::menuCommands = {
+    {"help", "h(elp): show this help"},
+    {"write", "w(rite): save"},
+    {"exit", "e(xit): leave witout saving"},
+    {"show", "s(how) [code]: show glyph"},
+    {"modify", "m(odify) [code]: edit glyph interactively"},
+};
 
