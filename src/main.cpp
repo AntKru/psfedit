@@ -6,6 +6,8 @@
 
 #include "psf.h"
 #include "ui.h"
+#include "viewer.h"
+#include "editor.h"
 
 namespace fs = std::filesystem;
 
@@ -46,14 +48,14 @@ int main(int argc, char** argv) {
         switch (command.first) {
             case UI::Command::SHOW:
                 try {
-                    UI::showGlyph(psf.getGlyph(command.second));
+                    Viewer::showGlyph(psf.getGlyph(command.second));
                 } catch (std::out_of_range& e) {
                     std::println("Failed to get glyph: {}", e.what());
                 }
                 break;
             case UI::Command::EDIT:
                 try {
-                    psf.setGlyph(command.second, UI::editGlyph(psf.getGlyph(command.second)));
+                    psf.setGlyph(command.second, Editor::editGlyph(psf.getGlyph(command.second)));
                 } catch (std::out_of_range& e) {
                     std::println("Failed to get glyph: {}", e.what());
                 }

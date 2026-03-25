@@ -3,5 +3,7 @@ src = files(
   'psf.cpp',
   'glyph.cpp',
   'ui.cpp',
+  'viewer.cpp',
+  'editor.cpp',
 )
 
