@@ -9,11 +9,6 @@
 
 Glyph Editor::editGlyph(const Glyph& glyph) {
     rl_attempted_completion_function = Editor::editorCompletion;
-    const bool shrink = glyph.getWidth() > 32;
-    if (shrink) {
-        std::println("Warning: this view has a lower resolution than the original, but you can still edit the full resolution.");
-        std::println("Please rely on the equal signs.");
-    }
     Glyph newGlyph(glyph);
     std::vector<Glyph> editorHistory;
     bool preview = true;

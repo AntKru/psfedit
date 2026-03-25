@@ -10,6 +10,7 @@ class Viewer : public UI {
         static void showGlyphs(const std::vector<Glyph>& glyphs);
 
     protected:
-        static void printGlyphLine(const std::vector<bool>& line, bool highlight = false, bool shrink = false);
+        static void printCoordinate(size_t coordinate);
+        static bool printGlyphLine(const Glyph& glyph, size_t lineNumber);
 };
 
