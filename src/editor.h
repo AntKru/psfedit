@@ -5,7 +5,7 @@
 
 class Editor : public Viewer {
     public:
-        static Glyph editGlyph(const Glyph& glyph);
+        static Glyph editGlyph(Glyph glyph);
 
     private:
         static char** editorCompletion(const char* text, int start, int end);

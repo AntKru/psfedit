@@ -13,7 +13,7 @@ void printGlyphLine(const std::vector<bool>& line, bool highlight = false, bool 
 std::pair<UI::Command, unsigned short int> UI::getCommand() {
     rl_attempted_completion_function = UI::menuCompletion;
     while (true) {
-        char* line = readline("type h for help> ");
+        char* line = readline("\033[36mtype h for help>\033[0m ");
         if (line == nullptr) {
             return {Command::EXIT, 0};
         }

@@ -7,17 +7,18 @@
 
 #include "editor.h"
 
-Glyph Editor::editGlyph(const Glyph& glyph) {
+Glyph Editor::editGlyph(Glyph glyph) {
     rl_attempted_completion_function = Editor::editorCompletion;
     Glyph newGlyph(glyph);
     std::vector<Glyph> editorHistory;
     bool preview = true;
+    bool modified = false;
     while (true) {
         if (preview) {
             Viewer::showGlyphs({glyph, newGlyph});
         }
         preview = true;
-        char* line = readline("Editing mode> ");
+        char* line = readline(std::format("\033[36mEditing mode>{}\033[0m ", modified ? "\033[31m*" : "").c_str());
         if (line == nullptr) {
             // do not save changes
             return glyph;
@@ -35,12 +36,14 @@ Glyph Editor::editGlyph(const Glyph& glyph) {
             }
             preview = false;
         } else if (command == "w" || command == "write") {
-            return newGlyph;
+            glyph = newGlyph;
+            modified = false;
         } else if (command == "e" || command == "exit") {
             return glyph;
         } else if (command == "s" || command == "set"
             || command == "us" || command == "unset") {
             editorHistory.push_back(newGlyph);
+            modified = true;
             std::string xs, ys;
             lineStream >> xs >> ys;
             size_t x, y;
@@ -58,6 +61,7 @@ Glyph Editor::editGlyph(const Glyph& glyph) {
                 preview = false;
             }
         } else if (command == "u" || command == "undo") {
+            modified = true;
             if (editorHistory.empty()) {
                 newGlyph = glyph;
                 std::println("Oldest change");
