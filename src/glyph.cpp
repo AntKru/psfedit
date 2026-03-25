@@ -16,6 +16,12 @@ Glyph::Glyph(const Glyph& glyph)
     std::copy(glyph.getBitmap(), glyph.getBitmap() + m_width * m_height, m_bitmap);
 }
 
+Glyph& Glyph::operator=(const Glyph& glyph) {
+    m_bitmap = new unsigned char[m_width * m_height];
+    std::copy(glyph.getBitmap(), glyph.getBitmap() + m_width * m_height, m_bitmap);
+    return *this;
+}
+
 Glyph::~Glyph() {
     delete[] m_bitmap;
 }

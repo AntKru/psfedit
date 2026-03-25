@@ -8,6 +8,7 @@ class Glyph {
     public:
         Glyph(unsigned char* bitmap, const uint32_t height, const uint32_t width);
         Glyph(const Glyph& glyph);
+        Glyph& operator=(const Glyph& glyph);
         ~Glyph();
         bool getBit(const size_t x, const size_t y) const;
         void setBit(const size_t x, const size_t y, const bool bit);

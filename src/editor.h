@@ -10,5 +10,7 @@ class Editor : public Viewer {
     private:
         static char** editorCompletion(const char* text, int start, int end);
         static char* editorCompletionGenerator(const char* text, int state);
+
+        static const std::vector<std::pair<std::string, std::string>> editorCommands;
 };
 

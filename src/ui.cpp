@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include <print>
-#include <iostream>
 #include <sstream>
 #include <vector>
 #include <readline/readline.h>
@@ -73,10 +72,10 @@ char* UI::menuCompletionGenerator(const char* text, int state) {
 }
 
 const std::vector<std::pair<std::string, std::string>> UI::menuCommands = {
-    {"help", "h(elp): show this help"},
-    {"write", "w(rite): save"},
-    {"exit", "e(xit): leave witout saving"},
-    {"show", "s(how) [code]: show glyph"},
-    {"modify", "m(odify) [code]: edit glyph interactively"},
+    {"help", "h, help: show this help"},
+    {"write", "w, write: save"},
+    {"exit", "e, exit: leave witout saving"},
+    {"show", "s, show [code]: show glyph"},
+    {"modify", "m, modify [code]: edit glyph interactively"},
 };
 
