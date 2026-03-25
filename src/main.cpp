@@ -41,9 +41,8 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    UI ui;
     std::pair<UI::Command, unsigned short int> command = {UI::Command::COMMAND_SIZE, 0};
-    while ((command = ui.getCommand()).first != UI::Command::EXIT) {
+    while ((command = UI::getCommand()).first != UI::Command::EXIT) {
         switch (command.first) {
             case UI::Command::SHOW:
                 try {
