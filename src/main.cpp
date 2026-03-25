@@ -66,6 +66,9 @@ int main(int argc, char** argv) {
                     writeFile.write(buffer, fileSize);
                 }
                 break;
+            case UI::Command::HEADER:
+                UI::showHeader(psf.getHeader());
+                break;
             default:
                 std::println("Could not handle command {}", static_cast<int>(command.first));
         }

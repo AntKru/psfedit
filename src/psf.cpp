@@ -52,12 +52,8 @@ bool Psf::setGlyph(unsigned short int code, const Glyph& glyph) {
     return true;
 }
 
-unsigned char* Psf::getGlyphPointer(unsigned short int code) {
-    unsigned char* glyph = (unsigned char*)m_buffer + m_header->headersize + m_unicodeTable[code] * m_header->bytesperglyph;
-    if ((std::size_t)(glyph - (unsigned char*)m_buffer) + m_header->bytesperglyph > m_size) {
-        return nullptr;
-    }
-    return glyph;
+Psf::PsfHeader Psf::getHeader() {
+    return *m_header;
 }
 
 void Psf::parseUnicodeTable() {
@@ -80,5 +76,13 @@ void Psf::parseUnicodeTable() {
             utf8str += *bytePointer;
         }
     }
+}
+
+unsigned char* Psf::getGlyphPointer(unsigned short int code) {
+    unsigned char* glyph = (unsigned char*)m_buffer + m_header->headersize + m_unicodeTable[code] * m_header->bytesperglyph;
+    if ((std::size_t)(glyph - (unsigned char*)m_buffer) + m_header->bytesperglyph > m_size) {
+        return nullptr;
+    }
+    return glyph;
 }
 

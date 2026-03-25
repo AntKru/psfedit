@@ -13,11 +13,6 @@ class Psf {
         Glyph getGlyph(unsigned short int code);
         bool setGlyph(unsigned short int code, const Glyph& glyph);
 
-    private:
-        char* m_buffer;
-        std::size_t m_size;
-        uint16_t m_unicodeTable[std::numeric_limits<unsigned short>::max()];
-
         struct PsfHeader {
             uint32_t magic;
             uint32_t version;
@@ -28,6 +23,13 @@ class Psf {
             uint32_t height;
             uint32_t width;
         };
+
+        PsfHeader getHeader();
+
+    private:
+        char* m_buffer;
+        std::size_t m_size;
+        uint16_t m_unicodeTable[std::numeric_limits<unsigned short>::max()];
 
         PsfHeader* m_header;
 

@@ -44,10 +44,22 @@ std::pair<UI::Command, unsigned short int> UI::getCommand() {
             } catch (const std::exception& e) {
                 std::println(stderr, "Invalid number: {}", number);
             }
+        } else if (command == "header") {
+            return {Command::HEADER, 0};
         } else {
             std::println("Unknown command: {}", command);
         }
     }
+}
+
+void UI::showHeader(Psf::PsfHeader header) {
+    std::println("Version: {}", header.version);
+    std::println("Header size: {}", header.headersize);
+    std::println("flags: {}", header.flags);
+    std::println("number of glyphs: {}", header.numglyph);
+    std::println("bytes per glyph: {}", header.bytesperglyph);
+    std::println("height: {}", header.height);
+    std::println("width: {}", header.width);
 }
 
 char** UI::menuCompletion(const char* text, int start, int end) {
@@ -77,5 +89,6 @@ const std::vector<std::pair<std::string, std::string>> UI::menuCommands = {
     {"exit", "e, exit: leave witout saving"},
     {"show", "s, show [code]: show glyph"},
     {"modify", "m, modify [code]: edit glyph interactively"},
+    {"header", "header: show font header"},
 };
 
