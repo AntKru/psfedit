@@ -60,6 +60,24 @@ Glyph Editor::editGlyph(Glyph glyph) {
                 std::println("Invalid coordinates: {}, {}", xs, ys);
                 preview = false;
             }
+        } else if (command == "f" || command == "fill") {
+            std::string x1s, y1s, x2s, y2s;
+            lineStream >> x1s >> y1s >> x2s >> y2s;
+            size_t x1, y1, x2, y2;
+            try {
+                x1 = stoi(x1s);
+                y1 = stoi(y1s);
+                x2 = stoi(x2s);
+                y2 = stoi(y2s);
+                modified = true;
+                fillGlyph(newGlyph, x1, y1, x2, y2);
+            } catch (const std::exception& e) {
+                std::println("Invalid coordinates: {}, {}, {}, {}", x1s, y1s, x2s, y2s);
+                preview = false;
+            }
+        } else if (command == "c" || command == "clear") {
+            modified = true;
+            clearGlyph(newGlyph);
         } else if (command == "u" || command == "undo") {
             modified = true;
             if (editorHistory.empty()) {
@@ -72,6 +90,22 @@ Glyph Editor::editGlyph(Glyph glyph) {
         } else {
             std::println("Unknown editor command: {}", command);
             preview = false;
+        }
+    }
+}
+
+void Editor::fillGlyph(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2) {
+    for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); y++) {
+        for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); x++) {
+            glyph.setBit(x, y, true);
+        }
+    }
+}
+
+void Editor::clearGlyph(Glyph& glyph) {
+    for (size_t y = 0; y < glyph.getHeight(); y++) {
+        for (size_t x = 0; x < glyph.getWidth(); x++) {
+            glyph.setBit(x, y, false);
         }
     }
 }
@@ -103,6 +137,8 @@ const std::vector<std::pair<std::string, std::string>> Editor::editorCommands = 
     {"exit", "e, exit: leave editing mode witout saving"},
     {"set", "s, set [x] [y]: set pixel"},
     {"unset", "us, unset [x] [y]: unset pixel"},
+    {"fill", "f, fill [x1] [y1] [x2] [y2]: fill area"},
+    {"clear", "c, clear: clear glyph"},
     {"undo", "u, undo: undo last change"},
 };
 
