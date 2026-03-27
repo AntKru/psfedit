@@ -63,11 +63,22 @@ int main(int argc, char** argv) {
             case UI::Command::SAVE:
                 {
                     std::ofstream writeFile(filePath);
-                    writeFile.write(buffer, fileSize);
+                    writeFile.write(psf.getBuffer(), psf.getBufferSize());
                 }
                 break;
             case UI::Command::HEADER:
                 UI::showHeader(psf.getHeader());
+                break;
+            case UI::Command::ADD_GLYPH_UNICODE:
+                std::println("Warning: this is not implemented yet!");
+                if (!psf.addGlyphUnicode(command.second)) {
+                    std::println("Could not add glyph {}", command.second);
+                }
+                break;
+            case UI::Command::ADD_GLYPH_NO_UNICODE:
+                if (!psf.addGlyphNoUnicode()) {
+                    std::println("Could not add glyph");
+                }
                 break;
             default:
                 std::println("Could not handle command {}", static_cast<int>(command.first));

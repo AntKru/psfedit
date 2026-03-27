@@ -9,15 +9,20 @@
 #define PSF_MAGIC 0x864ab572
 
 Psf::Psf(char* buffer, std::size_t size) {
-    m_buffer = buffer;
+    m_buffer = new char[size];
+    std::copy(buffer, buffer + size, m_buffer);
     m_size = size;
-    m_header = (PsfHeader*)(buffer);
+    m_header = (PsfHeader*)(m_buffer);
     for (unsigned short i = 0; i < std::numeric_limits<unsigned short>::max(); i++) {
         m_unicodeTable[i] = i;
     }
     if (m_header->flags != 0) {
         parseUnicodeTable();
     }
+}
+
+Psf::~Psf() {
+    delete[] m_buffer;
 }
 
 bool Psf::isValid() {
@@ -31,6 +36,14 @@ bool Psf::isValid() {
         return false;
     }
     return true;
+}
+
+char* Psf::getBuffer() {
+    return m_buffer;
+}
+
+size_t Psf::getBufferSize() {
+    return m_size;
 }
 
 Glyph Psf::getGlyph(unsigned short int code) {
@@ -49,6 +62,30 @@ bool Psf::setGlyph(unsigned short int code, const Glyph& glyph) {
         return false;
     }
     std::copy(glyph.getBitmap(), glyph.getBitmap() + glyph.getHeight() * glyph.getWidth(), glyphp);
+    return true;
+}
+
+bool Psf::addGlyphNoUnicode() {
+    if (m_header->flags != 0) {
+        return false;
+    }
+    const size_t oldBufferSize = m_header->headersize + m_header->bytesperglyph * m_header->numglyph;
+    const size_t newBufferSize = oldBufferSize + m_header->bytesperglyph;
+    char* newBuffer = new char[newBufferSize];
+    std::copy(m_buffer, m_buffer + oldBufferSize, newBuffer);
+    delete[] m_buffer;
+    m_buffer = newBuffer;
+    m_size = newBufferSize;
+    m_header = (PsfHeader*)m_buffer;
+    m_header->numglyph++;
+    return true;
+}
+
+bool Psf::addGlyphUnicode(unsigned short int code) {
+    if (m_header->flags == 0) {
+        return false;
+    }
+    // TODO
     return true;
 }
 

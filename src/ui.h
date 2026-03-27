@@ -15,6 +15,8 @@ class UI {
             SAVE,
             EXIT,
             HEADER,
+            ADD_GLYPH_UNICODE,
+            ADD_GLYPH_NO_UNICODE,
             COMMAND_SIZE,
         };
 

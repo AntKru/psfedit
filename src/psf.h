@@ -9,9 +9,14 @@
 class Psf {
     public:
         Psf(char* buffer, std::size_t size);
+        ~Psf();
         bool isValid();
+        char* getBuffer();
+        size_t getBufferSize();
         Glyph getGlyph(unsigned short int code);
         bool setGlyph(unsigned short int code, const Glyph& glyph);
+        bool addGlyphNoUnicode();
+        bool addGlyphUnicode(unsigned short int code);
 
         struct PsfHeader {
             uint32_t magic;

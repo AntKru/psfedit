@@ -32,22 +32,31 @@ std::pair<UI::Command, unsigned short int> UI::getCommand() {
             return {Command::SAVE, 0};
         } else if (command == "e" || command == "exit") {
             return {Command::EXIT, 0};
-        } else if (command == "s" || command == "m"
-                || command == "show" || command == "modify") {
+        } else if (command == "header") {
+            return {Command::HEADER, 0};
+        } else if (command == "a" || command == "add") {
+            return {Command::ADD_GLYPH_NO_UNICODE, 0};
+        } else {
             std::string number;
             lineStream >> number;
             try {
+                Command cmd;
+                if (command == "s" || command == "show") {
+                    cmd = Command::SHOW;
+                } else if (command == "m" || command == "modify") {
+                    cmd = Command::EDIT;
+                } else if (command == "au" || command == "addu") {
+                    cmd = Command::ADD_GLYPH_UNICODE;
+                } else {
+                    std::println("Unknown command: {}", command);
+                }
                 return {
-                    (command == "s" || command == "show") ? Command::SHOW : Command::EDIT,
+                    cmd,
                     stoi(number)
                 };
             } catch (const std::exception& e) {
                 std::println(stderr, "Invalid number: {}", number);
             }
-        } else if (command == "header") {
-            return {Command::HEADER, 0};
-        } else {
-            std::println("Unknown command: {}", command);
         }
     }
 }
@@ -55,7 +64,7 @@ std::pair<UI::Command, unsigned short int> UI::getCommand() {
 void UI::showHeader(Psf::PsfHeader header) {
     std::println("Version: {}", header.version);
     std::println("Header size: {}", header.headersize);
-    std::println("flags: {}", header.flags);
+    std::println("flags: {} ({})", header.flags, header.flags ? "has unicode table" : "no unicode table");
     std::println("number of glyphs: {}", header.numglyph);
     std::println("bytes per glyph: {}", header.bytesperglyph);
     std::println("height: {}", header.height);
@@ -90,5 +99,7 @@ const std::vector<std::pair<std::string, std::string>> UI::menuCommands = {
     {"show", "s, show [code]: show glyph"},
     {"modify", "m, modify [code]: edit glyph interactively"},
     {"header", "header: show font header"},
+    {"add", "a, add: add new glyph (no unicode table)"},
+    {"addu", "au, addu [code]: add new glyph (font with unicode table)"},
 };
 
