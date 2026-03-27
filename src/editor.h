@@ -8,10 +8,10 @@ class Editor : public Viewer {
         static Glyph editGlyph(Glyph glyph);
 
     private:
-        static void fillGlyph(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2);
-        static void clearGlyph(Glyph& glyph);
-        static void drawLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2);
-        static void plotLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool high);
+        static void fillGlyph(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool bit);
+        static void clearGlyph(Glyph& glyph, bool bit);
+        static void drawLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool bit);
+        static void plotLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool high, bool bit);
         static char** editorCompletion(const char* text, int start, int end);
         static char* editorCompletionGenerator(const char* text, int state);
 

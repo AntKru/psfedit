@@ -14,12 +14,15 @@ Glyph Editor::editGlyph(Glyph glyph) {
     std::vector<Glyph> editorHistory;
     bool preview = true;
     bool modified = false;
+    bool erase = false;
     while (true) {
         if (preview) {
             Viewer::showGlyphs({glyph, newGlyph});
         }
         preview = true;
-        char* line = readline(std::format("\033[36mEditing mode>{}\033[0m ", modified ? "\033[31m*" : "").c_str());
+        char* line = readline(std::format("\033[36mEditing mode{}>{}\033[0m ",
+                    erase ? "[e]" : "",
+                    modified ? "\033[31m*" : "").c_str());
         if (line == nullptr) {
             // do not save changes
             return glyph;
@@ -74,9 +77,9 @@ Glyph Editor::editGlyph(Glyph glyph) {
                 editorHistory.push_back(newGlyph);
                 modified = true;
                 if (command == "f" || command == "fill") {
-                    fillGlyph(newGlyph, x1, y1, x2, y2);
+                    fillGlyph(newGlyph, x1, y1, x2, y2, !erase);
                 } else {
-                    drawLine(newGlyph, x1, y1, x2, y2);
+                    drawLine(newGlyph, x1, y1, x2, y2, !erase);
                 }
             } catch (const std::exception& e) {
                 std::println("Invalid coordinates: {}, {}, {}, {}", x1s, y1s, x2s, y2s);
@@ -85,7 +88,7 @@ Glyph Editor::editGlyph(Glyph glyph) {
         } else if (command == "c" || command == "clear") {
             modified = true;
             editorHistory.push_back(newGlyph);
-            clearGlyph(newGlyph);
+            clearGlyph(newGlyph, erase);
         } else if (command == "u" || command == "undo") {
             modified = true;
             if (editorHistory.empty()) {
@@ -95,6 +98,10 @@ Glyph Editor::editGlyph(Glyph glyph) {
                 newGlyph = editorHistory.back();
                 editorHistory.pop_back();
             }
+        } else if (command == "er" || command == "eraser") {
+            erase = !erase;
+            std::println("Toggled eraser");
+            preview = false;
         } else {
             std::println("Unknown editor command: {}", command);
             preview = false;
@@ -102,39 +109,39 @@ Glyph Editor::editGlyph(Glyph glyph) {
     }
 }
 
-void Editor::fillGlyph(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2) {
+void Editor::fillGlyph(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool bit) {
     for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); y++) {
         for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); x++) {
-            glyph.setBit(x, y, true);
+            glyph.setBit(x, y, bit);
         }
     }
 }
 
-void Editor::clearGlyph(Glyph& glyph) {
+void Editor::clearGlyph(Glyph& glyph, bool bit) {
     for (size_t y = 0; y < glyph.getHeight(); y++) {
         for (size_t x = 0; x < glyph.getWidth(); x++) {
-            glyph.setBit(x, y, false);
+            glyph.setBit(x, y, bit);
         }
     }
 }
 
-void Editor::drawLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2) {
+void Editor::drawLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool bit) {
     if (std::labs(static_cast<long>(y2) - static_cast<long>(y1)) < std::labs(static_cast<long>(x2) - static_cast<long>(x1))) {
         if (x1 > x2) {
-            plotLine(glyph, x2, y2, x1, y1, false);
+            plotLine(glyph, x2, y2, x1, y1, false, bit);
         } else {
-            plotLine(glyph, x1, y1, x2, y2, false);
+            plotLine(glyph, x1, y1, x2, y2, false, bit);
         }
     } else {
         if (y1 > y2) {
-            plotLine(glyph, x2, y2, x1, y1, true);
+            plotLine(glyph, x2, y2, x1, y1, true, bit);
         } else {
-            plotLine(glyph, x1, y1, x2, y2, true);
+            plotLine(glyph, x1, y1, x2, y2, true, bit);
         }
     }
 }
 
-void Editor::plotLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool high) {
+void Editor::plotLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool high, bool bit) {
     long d1 = high ? y2 - y1 : x2 - x1;
     long d2 = high ? x2 - x1 : y2 - y1;
     short i = 1;
@@ -146,9 +153,9 @@ void Editor::plotLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, 
     size_t val1 = high ? x1 : y1;
     for (size_t val2 = high ? y1 : x1; val2 <= (high ? y2 : x2); val2++) {
         if (high) {
-            glyph.setBit(val1, val2, true);
+            glyph.setBit(val1, val2, bit);
         } else {
-            glyph.setBit(val2, val1, true);
+            glyph.setBit(val2, val1, bit);
         }
         if (D > 0) {
             val1 += i;
@@ -190,5 +197,6 @@ const std::vector<std::pair<std::string, std::string>> Editor::editorCommands = 
     {"fill", "f, fill [x1] [y1] [x2] [y2]: fill area"},
     {"clear", "c, clear: clear glyph"},
     {"undo", "u, undo: undo last change"},
+    {"erase", "er, erase: toggle eraser (inverts line, fill and clear commands)"},
 };
 
