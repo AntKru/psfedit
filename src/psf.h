@@ -14,6 +14,7 @@ class Psf {
         bool isValid();
         char* getBuffer();
         size_t getBufferSize();
+        std::unordered_map<std::string, char*> getUnicodeTable();
         Glyph getGlyph(const std::string& code);
         bool setGlyph(const std::string& code, const Glyph& glyph);
         bool addGlyphNoUnicode();

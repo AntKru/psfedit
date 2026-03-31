@@ -80,6 +80,9 @@ int main(int argc, char** argv) {
                     std::println("Could not add glyph");
                 }
                 break;
+            case UI::Command::LIST:
+                UI::showList(psf.getUnicodeTable());
+                break;
             default:
                 std::println("Could not handle command {}", static_cast<int>(command.first));
         }

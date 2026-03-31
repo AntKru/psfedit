@@ -44,6 +44,8 @@ std::pair<UI::Command, std::string> UI::getCommand() {
             return {Command::EDIT, rest};
         } else if (command == "au" || command == "addu") {
             return {Command::ADD_GLYPH_UNICODE, rest};
+        } else if (command == "ls" || command == "list") {
+            return {Command::LIST, rest};
         } else {
             std::println("Unknown command: {}", command);
         }
@@ -58,6 +60,13 @@ void UI::showHeader(const Psf::PsfHeader& header) {
     std::println("bytes per glyph: {}", header.bytesperglyph);
     std::println("height: {}", header.height);
     std::println("width: {}", header.width);
+}
+
+void UI::showList(const std::unordered_map<std::string, char*> unicodeTable) {
+    for (const auto& [key, value] : unicodeTable) {
+        std::print("\"{}\" ", key);
+    }
+    std::println();
 }
 
 char** UI::menuCompletion(const char* text, int start, int end) {
@@ -90,5 +99,6 @@ const std::vector<std::pair<std::string, std::string>> UI::menuCommands = {
     {"header", "header: show font header"},
     {"add", "a, add: add new glyph (no unicode table)"},
     {"addu", "au, addu [character]: add new glyph (font with unicode table)"},
+    {"list", "ls, list: List all characters included in this font"},
 };
 

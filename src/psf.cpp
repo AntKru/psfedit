@@ -49,6 +49,10 @@ size_t Psf::getBufferSize() {
     return m_size;
 }
 
+std::unordered_map<std::string, char*> Psf::getUnicodeTable() {
+    return m_unicodeTable;
+}
+
 Glyph Psf::getGlyph(const std::string& code) {
     char* glyphp = getGlyphPointer(code);
     if (!glyphp) {
