@@ -47,16 +47,14 @@ size_t Psf::getBufferSize() {
 }
 
 Glyph Psf::getGlyph(unsigned short int code) {
-    if (code >= m_header->numglyph) {
+    unsigned char* glyphp = getGlyphPointer(code);
+    if (!glyphp) {
         throw std::out_of_range("Code not included in this font!");
     }
-    return Glyph(getGlyphPointer(code), m_header->height, m_header->width);
+    return Glyph(glyphp, m_header->height, m_header->width);
 }
 
 bool Psf::setGlyph(unsigned short int code, const Glyph& glyph) {
-    if (code >= m_header->numglyph) {
-        return false;
-    }
     unsigned char* glyphp = getGlyphPointer(code);
     if (!glyphp){
         return false;
@@ -117,7 +115,8 @@ void Psf::parseUnicodeTable() {
 
 unsigned char* Psf::getGlyphPointer(unsigned short int code) {
     unsigned char* glyph = (unsigned char*)m_buffer + m_header->headersize + m_unicodeTable[code] * m_header->bytesperglyph;
-    if ((std::size_t)(glyph - (unsigned char*)m_buffer) + m_header->bytesperglyph > m_size) {
+    unsigned char* glyphBufferEnd = (unsigned char*)m_buffer + m_header->headersize + m_header->numglyph * m_header->bytesperglyph;
+    if (glyph + m_header->bytesperglyph > glyphBufferEnd) {
         return nullptr;
     }
     return glyph;
