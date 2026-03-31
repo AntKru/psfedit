@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    std::pair<UI::Command, unsigned short int> command = {UI::Command::COMMAND_SIZE, 0};
+    std::pair<UI::Command, std::string> command = {UI::Command::COMMAND_SIZE, ""};
     while ((command = UI::getCommand()).first != UI::Command::EXIT) {
         switch (command.first) {
             case UI::Command::SHOW:

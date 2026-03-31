@@ -6,7 +6,7 @@
 
 class Glyph {
     public:
-        Glyph(unsigned char* bitmap, const uint32_t height, const uint32_t width);
+        Glyph(char* bitmap, const uint32_t height, const uint32_t width);
         Glyph(const Glyph& glyph);
         Glyph& operator=(const Glyph& glyph);
         ~Glyph();

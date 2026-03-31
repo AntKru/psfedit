@@ -20,8 +20,8 @@ class UI {
             COMMAND_SIZE,
         };
 
-        static std::pair<Command, unsigned short int> getCommand();
-        static void showHeader(Psf::PsfHeader header);
+        static std::pair<Command, std::string> getCommand();
+        static void showHeader(const Psf::PsfHeader& header);
 
     private:
         static char** menuCompletion(const char* text, int start, int end);

@@ -2,7 +2,8 @@
 #pragma once
 
 #include <cstdint>
-#include <limits>
+#include <string>
+#include <unordered_map>
 
 #include "glyph.h"
 
@@ -13,10 +14,10 @@ class Psf {
         bool isValid();
         char* getBuffer();
         size_t getBufferSize();
-        Glyph getGlyph(unsigned short int code);
-        bool setGlyph(unsigned short int code, const Glyph& glyph);
+        Glyph getGlyph(const std::string& code);
+        bool setGlyph(const std::string& code, const Glyph& glyph);
         bool addGlyphNoUnicode();
-        bool addGlyphUnicode(unsigned short int code);
+        bool addGlyphUnicode(const std::string& code);
 
         struct PsfHeader {
             uint32_t magic;
@@ -34,11 +35,11 @@ class Psf {
     private:
         char* m_buffer;
         std::size_t m_size;
-        uint16_t m_unicodeTable[std::numeric_limits<unsigned short>::max()];
+        std::unordered_map<std::string, char*> m_unicodeTable;
 
         PsfHeader* m_header;
 
         void parseUnicodeTable();
-        unsigned char* getGlyphPointer(unsigned short int code);
+        char* getGlyphPointer(const std::string& code);
 };
 

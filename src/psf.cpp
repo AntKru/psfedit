@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include <stdexcept>
-#include <codecvt>
-#include <locale>
-
 #include "psf.h"
+
+#include <format>
+#include <stdexcept>
 
 #define PSF_MAGIC 0x864ab572
 
@@ -13,11 +12,15 @@ Psf::Psf(char* buffer, std::size_t size) {
     std::copy(buffer, buffer + size, m_buffer);
     m_size = size;
     m_header = (PsfHeader*)(m_buffer);
-    for (unsigned short i = 0; i < std::numeric_limits<unsigned short>::max(); i++) {
-        m_unicodeTable[i] = i;
-    }
+    m_unicodeTable.reserve(m_header->numglyph);
     if (m_header->flags != 0) {
         parseUnicodeTable();
+    } else {
+        for (size_t i = 0; i < std::min(m_header->numglyph, 256u); i++) {
+            char* glyphStart = m_buffer + m_header->headersize;
+            const unsigned char key[] = {static_cast<unsigned char>(i), 0};
+            m_unicodeTable[(char*)key] = glyphStart + i * m_header->bytesperglyph;
+        }
     }
 }
 
@@ -46,16 +49,16 @@ size_t Psf::getBufferSize() {
     return m_size;
 }
 
-Glyph Psf::getGlyph(unsigned short int code) {
-    unsigned char* glyphp = getGlyphPointer(code);
+Glyph Psf::getGlyph(const std::string& code) {
+    char* glyphp = getGlyphPointer(code);
     if (!glyphp) {
-        throw std::out_of_range("Code not included in this font!");
+        throw std::out_of_range(std::format("\"{}\" is not included in this font", code));
     }
     return Glyph(glyphp, m_header->height, m_header->width);
 }
 
-bool Psf::setGlyph(unsigned short int code, const Glyph& glyph) {
-    unsigned char* glyphp = getGlyphPointer(code);
+bool Psf::setGlyph(const std::string& code, const Glyph& glyph) {
+    char* glyphp = getGlyphPointer(code);
     if (!glyphp){
         return false;
     }
@@ -79,7 +82,7 @@ bool Psf::addGlyphNoUnicode() {
     return true;
 }
 
-bool Psf::addGlyphUnicode(unsigned short int code) {
+bool Psf::addGlyphUnicode(const std::string& code) {
     if (m_header->flags == 0) {
         return false;
     }
@@ -92,33 +95,41 @@ Psf::PsfHeader Psf::getHeader() {
 }
 
 void Psf::parseUnicodeTable() {
-    uint16_t glyph = 0;
-    std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> conv_utf8_utf16;
-    std::string utf8str;
+    std::string characters, series;
+    char* glyphBufferStart = m_buffer + m_header->headersize;
+    char* glyph = glyphBufferStart;
+    bool isSeries = false;
     for (
-        unsigned char* bytePointer = (unsigned char*)m_buffer + m_header->headersize + m_header->numglyph * m_header->bytesperglyph;
+        unsigned char* bytePointer = (unsigned char*)glyphBufferStart + m_header->numglyph * m_header->bytesperglyph;
         bytePointer < (unsigned char*)m_buffer + m_size;
         bytePointer++
     ) {
-        if (*bytePointer == 0xFF) {
-            std::u16string utf16str
-                = conv_utf8_utf16.from_bytes(utf8str);
-
-            m_unicodeTable[glyph] = utf16str[0];
-            glyph++;
-            utf8str.clear();
+        if (*bytePointer == 0xFE) {
+            isSeries = true;
+        } else if (*bytePointer == 0xFF) {
+            for (const char character : characters) {
+                m_unicodeTable[std::string{character}] = glyph;
+            }
+            if (!series.empty()) {
+                m_unicodeTable[series] = glyph;
+            }
+            characters.clear();
+            series.clear();
+            isSeries = false;
+            glyph += m_header->bytesperglyph;
+        } else if (!isSeries) {
+            characters += *bytePointer;
         } else {
-            utf8str += *bytePointer;
+            series += *bytePointer;
         }
     }
 }
 
-unsigned char* Psf::getGlyphPointer(unsigned short int code) {
-    unsigned char* glyph = (unsigned char*)m_buffer + m_header->headersize + m_unicodeTable[code] * m_header->bytesperglyph;
-    unsigned char* glyphBufferEnd = (unsigned char*)m_buffer + m_header->headersize + m_header->numglyph * m_header->bytesperglyph;
-    if (glyph + m_header->bytesperglyph > glyphBufferEnd) {
+char* Psf::getGlyphPointer(const std::string& code) {
+    auto entry = m_unicodeTable.find(code);
+    if (entry == m_unicodeTable.end()) {
         return nullptr;
     }
-    return glyph;
+    return entry->second;
 }
 

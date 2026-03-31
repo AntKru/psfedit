@@ -4,7 +4,7 @@
 #include <format>
 #include <stdexcept>
 
-Glyph::Glyph(unsigned char* bitmap, const uint32_t height, const uint32_t width)
+Glyph::Glyph(char* bitmap, const uint32_t height, const uint32_t width)
     : m_height(height), m_width(width) {
     m_bitmap = new unsigned char[width * height];
     std::copy(bitmap, bitmap + width * height, m_bitmap);
