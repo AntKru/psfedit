@@ -18,7 +18,7 @@ class Psf {
         Glyph getGlyph(const std::string& code);
         bool setGlyph(const std::string& code, const Glyph& glyph);
         bool addGlyphNoUnicode();
-        bool addGlyphUnicode(const std::string& code);
+        bool addGlyphUnicode(std::string code);
 
         struct PsfHeader {
             uint32_t magic;

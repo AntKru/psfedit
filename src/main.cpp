@@ -70,7 +70,6 @@ int main(int argc, char** argv) {
                 UI::showHeader(psf.getHeader());
                 break;
             case UI::Command::ADD_GLYPH_UNICODE:
-                std::println("Warning: this is not implemented yet!");
                 if (!psf.addGlyphUnicode(command.second)) {
                     std::println("Could not add glyph {}", command.second);
                 }

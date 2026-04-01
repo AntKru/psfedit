@@ -87,11 +87,27 @@ bool Psf::addGlyphNoUnicode() {
     return true;
 }
 
-bool Psf::addGlyphUnicode(const std::string& code) {
+bool Psf::addGlyphUnicode(std::string code) {
     if (m_header->flags == 0) {
         return false;
     }
-    // TODO
+    if (code.size() > 1) {
+        code.insert(code.begin(), 1, (char)0xFE);
+    }
+    code += (char)0xFF;
+    const size_t oldSizeWithoutUnicode = m_header->headersize + m_header->numglyph * m_header->bytesperglyph;
+    const size_t newSizeWithoutUnicode = oldSizeWithoutUnicode + m_header->bytesperglyph;
+    const size_t newBufferSize = m_size + m_header->bytesperglyph + code.size();
+    char* newBuffer = new char[newBufferSize];
+    std::copy(m_buffer, m_buffer + oldSizeWithoutUnicode, newBuffer);
+    std::copy(m_buffer + oldSizeWithoutUnicode, m_buffer + m_size, newBuffer + newSizeWithoutUnicode);
+    std::copy(code.c_str(), code.c_str() + code.size(), newBuffer + newBufferSize - code.size());
+    delete m_buffer;
+    m_buffer = newBuffer;
+    m_size = newBufferSize;
+    m_header = (PsfHeader*)m_buffer;
+    m_header->numglyph++;
+    parseUnicodeTable();
     return true;
 }
 
@@ -100,6 +116,7 @@ Psf::PsfHeader Psf::getHeader() {
 }
 
 void Psf::parseUnicodeTable() {
+    m_unicodeTable.clear();
     std::vector<std::string> characters;
     char* glyphBufferStart = m_buffer + m_header->headersize;
     char* glyph = glyphBufferStart;
@@ -110,9 +127,7 @@ void Psf::parseUnicodeTable() {
         bytePointer++
     ) {
         if (*bytePointer == 0xFE) {
-            if (isSeries) {
-                characters.push_back("");
-            }
+            characters.push_back("");
             isSeries = true;
         } else if (*bytePointer == 0xFF) {
             for (const std::string& character : characters) {
@@ -138,7 +153,7 @@ char* Psf::getGlyphPointer(const std::string& code) {
     if (entry == m_unicodeTable.end()) {
         return nullptr;
     }
-    if (entry->second + m_header->bytesperglyph > m_buffer + m_size) {
+    if (entry->second + m_header->bytesperglyph > m_buffer + m_size || entry->second < m_buffer + m_header->headersize) {
         return nullptr;
     }
     return entry->second;
