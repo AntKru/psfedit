@@ -31,7 +31,6 @@ bool Glyph::getBit(const size_t x, const size_t y) const {
         throw std::out_of_range(std::format("{} {} is not in the bitmap of size {} {}", x, y, m_width, m_height));
     }
     const unsigned int bytesPerGlyphLine = (m_width + 7) / 8;
-    // If the font is wider than one byte
     const size_t byteNum = x / 8;
     uint8_t mask = 128 >> (x % 8);
     return m_bitmap[y * bytesPerGlyphLine + byteNum] & mask ;
@@ -41,12 +40,13 @@ void Glyph::setBit(const size_t x, const size_t y, const bool bit) {
     if (x >= m_width || y >= m_height) {
         throw std::out_of_range(std::format("{} {} is not in the bitmap of size {} {}", x, y, m_width, m_height));
     }
+    const unsigned int bytesPerGlyphLine = (m_width + 7) / 8;
     const size_t byteNum = x / 8;
     uint8_t mask = 128 >> (x % 8);
     if (bit) {
-        m_bitmap[y + byteNum] |= mask;
+        m_bitmap[y * bytesPerGlyphLine + byteNum] |= mask;
     } else {
-        m_bitmap[y + byteNum] &= ~mask;
+        m_bitmap[y * bytesPerGlyphLine + byteNum] &= ~mask;
     }
 }
 
