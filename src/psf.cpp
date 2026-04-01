@@ -2,6 +2,7 @@
 
 #include "psf.h"
 
+#include <vector>
 #include <format>
 #include <stdexcept>
 
@@ -99,7 +100,7 @@ Psf::PsfHeader Psf::getHeader() {
 }
 
 void Psf::parseUnicodeTable() {
-    std::string characters, series;
+    std::vector<std::string> characters;
     char* glyphBufferStart = m_buffer + m_header->headersize;
     char* glyph = glyphBufferStart;
     bool isSeries = false;
@@ -109,22 +110,25 @@ void Psf::parseUnicodeTable() {
         bytePointer++
     ) {
         if (*bytePointer == 0xFE) {
+            if (isSeries) {
+                characters.push_back("");
+            }
             isSeries = true;
         } else if (*bytePointer == 0xFF) {
-            for (const char character : characters) {
-                m_unicodeTable[std::string{character}] = glyph;
-            }
-            if (!series.empty()) {
-                m_unicodeTable[series] = glyph;
+            for (const std::string& character : characters) {
+                m_unicodeTable[character] = glyph;
             }
             characters.clear();
-            series.clear();
             isSeries = false;
             glyph += m_header->bytesperglyph;
         } else if (!isSeries) {
-            characters += *bytePointer;
+            if (characters.empty()) {
+                characters.push_back("");
+            }
+            characters.back() = *bytePointer;
+            characters.push_back("");
         } else {
-            series += *bytePointer;
+            characters.back() += *bytePointer;
         }
     }
 }
@@ -132,6 +136,9 @@ void Psf::parseUnicodeTable() {
 char* Psf::getGlyphPointer(const std::string& code) {
     auto entry = m_unicodeTable.find(code);
     if (entry == m_unicodeTable.end()) {
+        return nullptr;
+    }
+    if (entry->second + m_header->bytesperglyph > m_buffer + m_size) {
         return nullptr;
     }
     return entry->second;
