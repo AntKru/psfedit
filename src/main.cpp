@@ -51,6 +51,7 @@ int main(int argc, char** argv) {
             return EXIT_FAILURE;
         }
     }
+    bool saved = true;
     if (newFile) {
         if (std::filesystem::exists(filePath)) {
             std::println(stderr, "{} already exists!", filePath.string());
@@ -61,6 +62,7 @@ int main(int argc, char** argv) {
             std::println(stderr, "Failed to create new file, is the width dividable by 8?");
             return EXIT_FAILURE;
         }
+        saved = false;
     } else {
         psf = Psf::loadFromFile(filePath);
         if (!psf) {
@@ -75,7 +77,6 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    bool saved = true;
     std::pair<UI::Command, std::string> command = {UI::Command::COMMAND_SIZE, ""};
     while ((command = UI::getCommand(saved)).first != UI::Command::EXIT) {
         switch (command.first) {
