@@ -12,11 +12,25 @@
 namespace fs = std::filesystem;
 
 int main(int argc, char** argv) {
-    if (argc != 2) {
-        std::println("Usage: {} [FILE PATH]", argv[0]);
+    if (argc < 2) {
+        std::println("Usage: {} [OPTIONS] [FILE PATH]", argv[0]);
         return EXIT_SUCCESS;
     }
-    fs::path filePath = argv[1];
+    fs::path filePath = argv[argc - 1];
+    for (int i = 1; i < argc - 1; i++) {
+        std::string arg = argv[i];
+        if (arg == "-h" || arg == "--help") {
+            std::println("Usage: {} [OPTIONS] [FILE PATH]", argv[0]);
+            std::println("psfedit will put you in an interactive mode, where you can use the \"h\" command to learn more");
+            std::println();
+            std::println("Options:");
+            std::println("-h, --help: show this help message");
+            return EXIT_SUCCESS;
+        } else {
+            std::println("Unknown argument: {}", arg);
+            return EXIT_FAILURE;
+        }
+    }
     if (!fs::exists(filePath) || !fs::is_regular_file(filePath)) {
         std::println(stderr, "File {} does not exist!", filePath.string());
         return EXIT_FAILURE;
