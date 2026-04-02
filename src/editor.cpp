@@ -42,8 +42,10 @@ Glyph Editor::editGlyph(Glyph glyph) {
         } else if (command == "w" || command == "write") {
             glyph = newGlyph;
             modified = false;
-        } else if (command == "e" || command == "exit") {
+        } else if (command == "q" || command == "quit") {
             return glyph;
+        } else if (command == "wq") {
+            return newGlyph;
         } else if (command == "s" || command == "set"
             || command == "us" || command == "unset") {
             std::string xs, ys;
@@ -190,7 +192,8 @@ char* Editor::editorCompletionGenerator(const char* text, int state) {
 const std::vector<std::pair<std::string, std::string>> Editor::editorCommands = {
     {"help", "h, help: show this help"},
     {"write", "w, write: save this glyph"},
-    {"exit", "e, exit: leave editing mode witout saving"},
+    {"quit", "q, quit: leave editing mode witout saving"},
+    {"wq", "wq: quit and save"},
     {"set", "s, set [x] [y]: set pixel"},
     {"unset", "us, unset [x] [y]: unset pixel"},
     {"line", "l, line [x1] [y1] [x2] [y2]: draw a line"},
