@@ -5,8 +5,11 @@
 #include <vector>
 #include <format>
 #include <stdexcept>
+#include <fstream>
 
 #define PSF_MAGIC 0x864ab572
+
+namespace fs = std::filesystem;
 
 Psf::Psf(char* buffer, std::size_t size) {
     m_buffer = new char[size];
@@ -113,6 +116,45 @@ bool Psf::addGlyphUnicode(std::string code) {
 
 Psf::PsfHeader Psf::getHeader() {
     return *m_header;
+}
+
+std::unique_ptr<Psf> Psf::loadFromFile(const std::filesystem::path& filePath) {
+    if (!fs::exists(filePath) || !fs::is_regular_file(filePath)) {
+        return nullptr;
+    }
+    // get file size
+    std::size_t fileSize = 0;
+    std::ifstream readFile(filePath, std::ifstream::binary);
+    if (!readFile.is_open()) {
+        return nullptr;
+    }
+    readFile.seekg(0, std::ifstream::end);
+    fileSize = readFile.tellg();
+    readFile.seekg(0, std::ifstream::beg);
+
+    // read file
+    char buffer[fileSize];
+    readFile.read(buffer, fileSize);
+    readFile.close();
+
+    return std::make_unique<Psf>((char*)buffer, fileSize);
+}
+
+std::unique_ptr<Psf> Psf::createNew(uint32_t height, uint32_t width, bool hasUnicodeTable) {
+    if (width % 8) {
+        return nullptr;
+    }
+    const uint32_t bytesperglyph = width / 8 * height;
+    PsfHeader* header = new PsfHeader;
+    header->magic = PSF_MAGIC;
+    header->version = 0;
+    header->headersize = sizeof(PsfHeader);
+    header->flags = hasUnicodeTable;
+    header->numglyph = 0;
+    header->bytesperglyph = bytesperglyph;
+    header->height = height;
+    header->width = width;
+    return std::make_unique<Psf>((char*)header, sizeof(PsfHeader));
 }
 
 void Psf::parseUnicodeTable() {

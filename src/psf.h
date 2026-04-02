@@ -2,6 +2,8 @@
 #pragma once
 
 #include <cstdint>
+#include <filesystem>
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -32,6 +34,9 @@ class Psf {
         };
 
         PsfHeader getHeader();
+
+        static std::unique_ptr<Psf> loadFromFile(const std::filesystem::path& filePath);
+        static std::unique_ptr<Psf> createNew(uint32_t height, uint32_t width, bool hasUnicodeTable = true);
 
     private:
         char* m_buffer;
