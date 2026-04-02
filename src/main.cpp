@@ -43,8 +43,9 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
+    bool saved = true;
     std::pair<UI::Command, std::string> command = {UI::Command::COMMAND_SIZE, ""};
-    while ((command = UI::getCommand()).first != UI::Command::EXIT) {
+    while ((command = UI::getCommand(saved)).first != UI::Command::EXIT) {
         switch (command.first) {
             case UI::Command::SHOW:
                 try {
@@ -56,6 +57,7 @@ int main(int argc, char** argv) {
             case UI::Command::EDIT:
                 try {
                     psf.setGlyph(command.second, Editor::editGlyph(psf.getGlyph(command.second)));
+                    saved = false;
                 } catch (std::out_of_range& e) {
                     std::println("Failed to get glyph: {}", e.what());
                 }
@@ -65,6 +67,7 @@ int main(int argc, char** argv) {
                     std::ofstream writeFile(filePath);
                     writeFile.write(psf.getBuffer(), psf.getBufferSize());
                 }
+                saved = true;
                 break;
             case UI::Command::HEADER:
                 UI::showHeader(psf.getHeader());
@@ -72,11 +75,15 @@ int main(int argc, char** argv) {
             case UI::Command::ADD_GLYPH_UNICODE:
                 if (!psf.addGlyphUnicode(command.second)) {
                     std::println("Could not add glyph {}", command.second);
+                } else {
+                    saved = false;
                 }
                 break;
             case UI::Command::ADD_GLYPH_NO_UNICODE:
                 if (!psf.addGlyphNoUnicode()) {
                     std::println("Could not add glyph");
+                } else {
+                    saved = false;
                 }
                 break;
             case UI::Command::LIST:

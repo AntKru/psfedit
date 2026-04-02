@@ -10,7 +10,7 @@
 
 void printGlyphLine(const std::vector<bool>& line, bool highlight = false, bool shrink = false);
 
-std::pair<UI::Command, std::string> UI::getCommand() {
+std::pair<UI::Command, std::string> UI::getCommand(bool saved) {
     rl_attempted_completion_function = UI::menuCompletion;
     static std::vector<std::pair<UI::Command, std::string>> commandQueue;
     if (!commandQueue.empty()) {
@@ -19,7 +19,8 @@ std::pair<UI::Command, std::string> UI::getCommand() {
         return command;
     }
     while (true) {
-        char* line = readline("\033[36mtype h for help>\033[0m ");
+        char* line = readline(
+            std::format("\033[36mtype h for help>{}\033[0m ", saved ? "" : "\033[31m*").c_str());
         if (line == nullptr) {
             return {Command::EXIT, ""};
         }

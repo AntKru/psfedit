@@ -22,7 +22,7 @@ class UI {
             COMMAND_SIZE,
         };
 
-        static std::pair<Command, std::string> getCommand();
+        static std::pair<Command, std::string> getCommand(bool saved);
         static void showHeader(const Psf::PsfHeader& header);
         static void showList(const std::unordered_map<std::string, char*> unicodeTable, bool longList = false);
 
