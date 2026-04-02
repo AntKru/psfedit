@@ -16,6 +16,7 @@ class UI {
             EXIT,
             HEADER,
             LIST,
+            LLIST,
             ADD_GLYPH_UNICODE,
             ADD_GLYPH_NO_UNICODE,
             COMMAND_SIZE,
@@ -23,7 +24,7 @@ class UI {
 
         static std::pair<Command, std::string> getCommand();
         static void showHeader(const Psf::PsfHeader& header);
-        static void showList(const std::unordered_map<std::string, char*> unicodeTable);
+        static void showList(const std::unordered_map<std::string, char*> unicodeTable, bool longList = false);
 
     private:
         static char** menuCompletion(const char* text, int start, int end);

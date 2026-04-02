@@ -82,6 +82,9 @@ int main(int argc, char** argv) {
             case UI::Command::LIST:
                 UI::showList(psf.getUnicodeTable());
                 break;
+            case UI::Command::LLIST:
+                UI::showList(psf.getUnicodeTable(), true);
+                break;
             default:
                 std::println("Could not handle command {}", static_cast<int>(command.first));
         }
