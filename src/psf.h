@@ -45,7 +45,8 @@ class Psf {
 
         PsfHeader* m_header;
 
-        void parseUnicodeTable();
+        void createMap();
+        void createMapFromTable();
         char* getGlyphPointer(const std::string& code);
 };
 

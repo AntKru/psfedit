@@ -18,13 +18,9 @@ Psf::Psf(char* buffer, std::size_t size) {
     m_header = (PsfHeader*)(m_buffer);
     m_unicodeTable.reserve(m_header->numglyph);
     if (m_header->flags != 0) {
-        parseUnicodeTable();
+        createMapFromTable();
     } else {
-        for (size_t i = 0; i < std::min(m_header->numglyph, 256u); i++) {
-            char* glyphStart = m_buffer + m_header->headersize;
-            const unsigned char key[] = {static_cast<unsigned char>(i), 0};
-            m_unicodeTable[(char*)key] = glyphStart + i * m_header->bytesperglyph;
-        }
+        createMap();
     }
 }
 
@@ -87,6 +83,7 @@ bool Psf::addGlyphNoUnicode() {
     m_size = newBufferSize;
     m_header = (PsfHeader*)m_buffer;
     m_header->numglyph++;
+    createMap();
     return true;
 }
 
@@ -110,7 +107,7 @@ bool Psf::addGlyphUnicode(std::string code) {
     m_size = newBufferSize;
     m_header = (PsfHeader*)m_buffer;
     m_header->numglyph++;
-    parseUnicodeTable();
+    createMapFromTable();
     return true;
 }
 
@@ -157,7 +154,16 @@ std::unique_ptr<Psf> Psf::createNew(uint32_t height, uint32_t width, bool hasUni
     return std::make_unique<Psf>((char*)header, sizeof(PsfHeader));
 }
 
-void Psf::parseUnicodeTable() {
+void Psf::createMap() {
+    m_unicodeTable.clear();
+    for (size_t i = 0; i < std::min(m_header->numglyph, 256u); i++) {
+        char* glyphStart = m_buffer + m_header->headersize;
+        const unsigned char key[] = {static_cast<unsigned char>(i), 0};
+        m_unicodeTable[(char*)key] = glyphStart + i * m_header->bytesperglyph;
+    }
+}
+
+void Psf::createMapFromTable() {
     m_unicodeTable.clear();
     std::vector<std::string> characters;
     char* glyphBufferStart = m_buffer + m_header->headersize;
