@@ -40,6 +40,12 @@ std::pair<UI::Command, std::string> UI::getCommand(bool saved) {
         } else if (command == "w" || command == "write") {
             return {Command::SAVE, rest};
         } else if (command == "q" || command == "quit") {
+            if (saved) {
+                return {Command::EXIT, rest};
+            } else {
+                std::println("You have unsaved changes, use \"{}!\" to quit anyway", command);
+            }
+        } else if (command == "q!" || command == "quit!") {
             return {Command::EXIT, rest};
         } else if (command == "wq") {
             commandQueue.push_back({Command::EXIT, rest});

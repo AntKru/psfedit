@@ -89,8 +89,11 @@ int main(int argc, char** argv) {
                 break;
             case UI::Command::EDIT:
                 try {
-                    psf->setGlyph(command.second, Editor::editGlyph(psf->getGlyph(command.second)));
-                    saved = false;
+                    std::optional<Glyph> glyph = Editor::editGlyph(psf->getGlyph(command.second));
+                    if (glyph) {
+                        psf->setGlyph(command.second, *glyph);
+                        saved = false;
+                    }
                 } catch (std::out_of_range& e) {
                     std::println("Failed to get glyph: {}", e.what());
                 }

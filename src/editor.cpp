@@ -8,7 +8,7 @@
 
 #include "editor.h"
 
-Glyph Editor::editGlyph(Glyph glyph) {
+std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
     rl_attempted_completion_function = Editor::editorCompletion;
     Glyph newGlyph(glyph);
     std::vector<Glyph> editorHistory;
@@ -43,7 +43,16 @@ Glyph Editor::editGlyph(Glyph glyph) {
             glyph = newGlyph;
             modified = false;
         } else if (command == "q" || command == "quit") {
-            return glyph;
+            if (editorHistory.empty()) {
+                return {};
+            } else if (modified) {
+                std::println("You have unsaved changes, use \"{}!\" to quit anyway", command);
+                preview = false;
+            } else {
+                return glyph;
+            }
+        } else if (command == "q!" || command == "quit!") {
+            return {};
         } else if (command == "wq") {
             return newGlyph;
         } else if (command == "s" || command == "set"

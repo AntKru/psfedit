@@ -5,7 +5,7 @@
 
 class Editor : public Viewer {
     public:
-        static Glyph editGlyph(Glyph glyph);
+        static std::optional<Glyph> editGlyph(Glyph glyph);
 
     private:
         static void fillGlyph(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool bit);
