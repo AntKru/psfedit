@@ -169,29 +169,33 @@ void Psf::createMapFromTable() {
     char* glyphBufferStart = m_buffer + m_header->headersize;
     char* glyph = glyphBufferStart;
     bool isSeries = false;
+    std::string currentSeries;
     for (
         unsigned char* bytePointer = (unsigned char*)glyphBufferStart + m_header->numglyph * m_header->bytesperglyph;
         bytePointer < (unsigned char*)m_buffer + m_size;
         bytePointer++
     ) {
         if (*bytePointer == 0xFE) {
-            characters.push_back("");
+            if (isSeries) {
+                characters.push_back(currentSeries);
+            }
             isSeries = true;
+            currentSeries.clear();
         } else if (*bytePointer == 0xFF) {
+            if (isSeries) {
+                characters.push_back(currentSeries);
+            }
+            currentSeries.clear();
             for (const std::string& character : characters) {
                 m_unicodeTable[character] = glyph;
             }
             characters.clear();
             isSeries = false;
             glyph += m_header->bytesperglyph;
-        } else if (!isSeries) {
-            if (characters.empty()) {
-                characters.push_back("");
-            }
-            characters.back() = *bytePointer;
-            characters.push_back("");
+        } else if (isSeries) {
+            currentSeries += *bytePointer;
         } else {
-            characters.back() += *bytePointer;
+            characters.push_back(std::string((char*)bytePointer, 1));
         }
     }
 }
