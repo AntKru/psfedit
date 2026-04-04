@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
         }
         psf = Psf::createNew(newFileHeight, newFileWidth, newFileUnicode);
         if (!psf) {
-            std::println(stderr, "Failed to create new file, is the width dividable by 8?");
+            std::println(stderr, "Failed to create new font");
             return EXIT_FAILURE;
         }
         saved = false;

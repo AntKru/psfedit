@@ -138,10 +138,8 @@ std::unique_ptr<Psf> Psf::loadFromFile(const std::filesystem::path& filePath) {
 }
 
 std::unique_ptr<Psf> Psf::createNew(uint32_t height, uint32_t width, bool hasUnicodeTable) {
-    if (width % 8) {
-        return nullptr;
-    }
-    const uint32_t bytesperglyph = width / 8 * height;
+    const uint32_t bytesPerGlyphLine = (width + 7 ) * 8;
+    const uint32_t bytesperglyph = bytesPerGlyphLine * height;
     PsfHeader* header = new PsfHeader;
     header->magic = PSF_MAGIC;
     header->version = 0;
