@@ -8,6 +8,7 @@
 #include "ui.h"
 #include "viewer.h"
 #include "editor.h"
+#include "config.h"
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -28,8 +29,12 @@ int main(int argc, char** argv) {
             std::println();
             std::println("Options:");
             std::println("-h, --help: show this help message");
+            std::println("-v, --version: show psfedit version");
             std::println("-c, --create [height] [width]: create a new file");
             std::println("-u, --create-unicode [height] [width]: like --create, but with unicode table");
+            return EXIT_SUCCESS;
+        } else if (arg == "-v" || arg == "--version") {
+            std::println("psfedit {}", VERSION_STR);
             return EXIT_SUCCESS;
         } else if (arg == "-c" || arg == "--create"
                 || arg == "-u" || arg == "--create-unicode") {
