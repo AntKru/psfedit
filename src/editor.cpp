@@ -109,7 +109,7 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
                 newGlyph = editorHistory.back();
                 editorHistory.pop_back();
             }
-        } else if (command == "er" || command == "eraser") {
+        } else if (command == "er" || command == "erase") {
             erase = !erase;
             std::println("Toggled eraser");
             preview = false;
