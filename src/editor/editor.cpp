@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include <cmath>
 #include <print>
 #include <sstream>
 #include <readline/readline.h>
@@ -88,9 +87,9 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
                 editorHistory.push_back(newGlyph);
                 modified = true;
                 if (command == "f" || command == "fill") {
-                    fillGlyph(newGlyph, x1, y1, x2, y2, !erase);
+                    newGlyph.fill(x1, y1, x2, y2, !erase);
                 } else {
-                    drawLine(newGlyph, x1, y1, x2, y2, !erase);
+                    newGlyph.drawLine(x1, y1, x2, y2, !erase);
                 }
             } catch (const std::exception& e) {
                 std::println("Invalid coordinates: {}, {}, {}, {}", x1s, y1s, x2s, y2s);
@@ -99,7 +98,7 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
         } else if (command == "c" || command == "clear") {
             modified = true;
             editorHistory.push_back(newGlyph);
-            clearGlyph(newGlyph, erase);
+            newGlyph.clear(erase);
         } else if (command == "u" || command == "undo") {
             modified = true;
             if (editorHistory.empty()) {
@@ -116,63 +115,6 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
         } else {
             std::println("Unknown editor command: {}", command);
             preview = false;
-        }
-    }
-}
-
-void Editor::fillGlyph(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool bit) {
-    for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); y++) {
-        for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); x++) {
-            glyph.setBit(x, y, bit);
-        }
-    }
-}
-
-void Editor::clearGlyph(Glyph& glyph, bool bit) {
-    for (size_t y = 0; y < glyph.getHeight(); y++) {
-        for (size_t x = 0; x < glyph.getWidth(); x++) {
-            glyph.setBit(x, y, bit);
-        }
-    }
-}
-
-void Editor::drawLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool bit) {
-    if (std::labs(static_cast<long>(y2) - static_cast<long>(y1)) < std::labs(static_cast<long>(x2) - static_cast<long>(x1))) {
-        if (x1 > x2) {
-            plotLine(glyph, x2, y2, x1, y1, false, bit);
-        } else {
-            plotLine(glyph, x1, y1, x2, y2, false, bit);
-        }
-    } else {
-        if (y1 > y2) {
-            plotLine(glyph, x2, y2, x1, y1, true, bit);
-        } else {
-            plotLine(glyph, x1, y1, x2, y2, true, bit);
-        }
-    }
-}
-
-void Editor::plotLine(Glyph& glyph, size_t x1, size_t y1, size_t x2, size_t y2, bool high, bool bit) {
-    long d1 = high ? y2 - y1 : x2 - x1;
-    long d2 = high ? x2 - x1 : y2 - y1;
-    short i = 1;
-    if (d2 < 0) {
-        i = -1;
-        d2 = -d2;
-    }
-    long D = 2 * d2 - d1;
-    size_t val1 = high ? x1 : y1;
-    for (size_t val2 = high ? y1 : x1; val2 <= (high ? y2 : x2); val2++) {
-        if (high) {
-            glyph.setBit(val1, val2, bit);
-        } else {
-            glyph.setBit(val2, val1, bit);
-        }
-        if (D > 0) {
-            val1 += i;
-            D += 2 * (d2 - d1);
-        } else {
-            D += 2 * d2;
         }
     }
 }

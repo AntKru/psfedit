@@ -4,6 +4,6 @@ src = files(
   'glyph.cpp',
   'ui.cpp',
   'viewer.cpp',
-  'editor.cpp',
+  'editor/editor.cpp',
 )
 

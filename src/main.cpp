@@ -7,7 +7,7 @@
 #include "psf.h"
 #include "ui.h"
 #include "viewer.h"
-#include "editor.h"
+#include "editor/editor.h"
 #include "config.h"
 
 int main(int argc, char** argv) {

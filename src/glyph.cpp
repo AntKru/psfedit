@@ -26,6 +26,18 @@ Glyph::~Glyph() {
     delete[] m_bitmap;
 }
 
+uint32_t Glyph::getHeight() const {
+    return m_height;
+}
+
+uint32_t Glyph::getWidth() const {
+    return m_width;
+}
+
+const unsigned char* Glyph::getBitmap() const {
+    return m_bitmap;
+}
+
 bool Glyph::getBit(const size_t x, const size_t y) const {
     if (x >= m_width || y >= m_height) {
         throw std::out_of_range(std::format("{} {} is not in the bitmap of size {} {}", x, y, m_width, m_height));
@@ -50,15 +62,60 @@ void Glyph::setBit(const size_t x, const size_t y, const bool bit) {
     }
 }
 
-uint32_t Glyph::getHeight() const {
-    return m_height;
+void Glyph::fill(size_t x1, size_t y1, size_t x2, size_t y2, bool bit) {
+    for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); y++) {
+        for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); x++) {
+            setBit(x, y, bit);
+        }
+    }
 }
 
-uint32_t Glyph::getWidth() const {
-    return m_width;
+void Glyph::clear(bool bit) {
+    for (size_t y = 0; y < getHeight(); y++) {
+        for (size_t x = 0; x < getWidth(); x++) {
+            setBit(x, y, bit);
+        }
+    }
 }
 
-const unsigned char* Glyph::getBitmap() const {
-    return m_bitmap;
+void Glyph::drawLine(size_t x1, size_t y1, size_t x2, size_t y2, bool bit) {
+    if (std::labs(static_cast<long>(y2) - static_cast<long>(y1)) < std::labs(static_cast<long>(x2) - static_cast<long>(x1))) {
+        if (x1 > x2) {
+            plotLine(x2, y2, x1, y1, false, bit);
+        } else {
+            plotLine(x1, y1, x2, y2, false, bit);
+        }
+    } else {
+        if (y1 > y2) {
+            plotLine(x2, y2, x1, y1, true, bit);
+        } else {
+            plotLine(x1, y1, x2, y2, true, bit);
+        }
+    }
+}
+
+void Glyph::plotLine(size_t x1, size_t y1, size_t x2, size_t y2, bool high, bool bit) {
+    long d1 = high ? y2 - y1 : x2 - x1;
+    long d2 = high ? x2 - x1 : y2 - y1;
+    short i = 1;
+    if (d2 < 0) {
+        i = -1;
+        d2 = -d2;
+    }
+    long D = 2 * d2 - d1;
+    size_t val1 = high ? x1 : y1;
+    for (size_t val2 = high ? y1 : x1; val2 <= (high ? y2 : x2); val2++) {
+        if (high) {
+            setBit(val1, val2, bit);
+        } else {
+            setBit(val2, val1, bit);
+        }
+        if (D > 0) {
+            val1 += i;
+            D += 2 * (d2 - d1);
+        } else {
+            D += 2 * d2;
+        }
+    }
 }
 
