@@ -1,0 +1,34 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: sudo apt-get update -y && sudo apt-get install -y libreadline-dev && pip3 install --user meson
+
+      - name: Build
+        run: LDFLAGS=-static-libstdc++ CXX=g++-14 meson setup build --buildtype=release --prefix=/tmp/psfedit-x86_64-linux --strip && meson install -C build
+
+      - name: Dist
+        run: CXX=g++-14 meson dist -C build
+
+      - name: Package
+        run: tar -czf psfedit-x86_64-linux.tar.gz -C /tmp psfedit-x86_64-linux
+
+      - name: Create release
+        run: gh release create ${{ github.ref_name }} --title ${{ github.ref_name }} --generate-notes psfedit-x86_64-linux.tar.gz build/meson-dist/*
+        env:
+          GH_TOKEN: ${{ github.token }}
+

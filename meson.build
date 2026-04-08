@@ -2,10 +2,10 @@ project('psfedit', 'cpp',
     default_options : ['cpp_std=c++23'],
     license : 'GPL-3.0-only',
     license_files : 'LICENSE',
-    version: run_command('version.sh', 'get_vcs', check : true).stdout().strip(),
+    version: run_command('scripts/version.sh', 'get_vcs', check : true).stdout().strip(),
 )
 
-meson.add_dist_script('version.sh', 'set_dist', meson.project_version())
+meson.add_dist_script('scripts/version.sh', 'set_dist', meson.project_version())
 
 src_inc = include_directories('src')
 deps = [

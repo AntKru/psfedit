@@ -13,21 +13,28 @@ A basic psf2 font editor and viewer.
 <img width="256" height="238" alt="image" src="https://github.com/user-attachments/assets/0b8b3cbc-56bd-4fb3-8871-807309996394" />
 
 ## Installation
-There are no binary releases at the moment, but does not have many dependencies so it is not too difficult to compile.
-I have tested it on Debian trixie.
+**For Linux users on x86_64:**
+You can find compiled binaries at the [releases page](https://github.com/AntKru/psfedit/releases).
+The binary is in the bin directory inside the archive.
+You still have to install GNU readline.
+After that you can skip to [Usage](#Usage)
+
+**For eveyone else:**
+You have to compile it on your own, but here is a simple guide.
+I have tested it on Debian trixie and Arch.
 You have to install
  - meson (`meson` package on Debian)
  - GNU readline (`libreadline-dev` package on Debian)
  - C++ compiler with C++23 support (`g++` package on Debian)
 
 ### 1. Download the source code
-You can download the source code from [here](https://github.com/AntKru/psfedit/releases) or clone this repository.
+If you just want the **latest release**, download the file `psfedit-vX.X.X.tar.xz` from [here](https://github.com/AntKru/psfedit/releases). Then do the following:
 ```sh
 # In your downloads directory
 tar -xf release-name.tar.xz
 cd release-name
 ```
-or with git
+If you want to work on this or have the **newest changes**, you should clone with git:
 ```sh
 git clone https://github.com/AntKru/psfedit
 cd psfedit
