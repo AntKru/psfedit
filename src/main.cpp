@@ -94,7 +94,8 @@ int main(int argc, char** argv) {
                 break;
             case UI::Command::EDIT:
                 try {
-                    std::optional<Glyph> glyph = Editor::editGlyph(psf->getGlyph(command.second));
+                    Editor editor;
+                    std::optional<Glyph> glyph = editor.editGlyph(psf->getGlyph(command.second));
                     if (glyph) {
                         psf->setGlyph(command.second, *glyph);
                         saved = false;

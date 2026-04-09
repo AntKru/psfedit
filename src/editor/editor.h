@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0-only
 #pragma once
 
-#include "viewer.h"
+#include <optional>
+#include <vector>
+#include <ncurses.h>
 
-class Editor : public Viewer {
+#include "glyph.h"
+
+class Editor {
     public:
-        static std::optional<Glyph> editGlyph(Glyph glyph);
+        Editor();
+        ~Editor();
+        std::optional<Glyph> editGlyph(Glyph glyph);
 
     private:
-        static char** editorCompletion(const char* text, int start, int end);
-        static char* editorCompletionGenerator(const char* text, int state);
-
-        static const std::vector<std::pair<std::string, std::string>> editorCommands;
+        std::vector<WINDOW*> windows;
 };
 

@@ -16,7 +16,7 @@ A basic psf2 font editor and viewer.
 **For Linux users on x86_64:**
 You can find compiled binaries at the [releases page](https://github.com/AntKru/psfedit/releases).
 The binary is in the bin directory inside the archive.
-You still have to install GNU readline.
+You still have to install GNU readline and ncurses.
 After that you can skip to [Usage](#Usage)
 
 **For eveyone else:**
@@ -25,6 +25,7 @@ I have tested it on Debian trixie and Arch.
 You have to install
  - meson (`meson` package on Debian)
  - GNU readline (`libreadline-dev` package on Debian)
+ - ncurses (`libncurses-dev` package on Debian)
  - C++ compiler with C++23 support (`g++` package on Debian)
 
 ### 1. Download the source code
