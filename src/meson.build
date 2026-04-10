@@ -5,5 +5,6 @@ src = files(
   'ui.cpp',
   'viewer.cpp',
   'editor/editor.cpp',
+  'editor/helpWindow.cpp',
 )
 

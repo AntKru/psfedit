@@ -2,8 +2,8 @@
 #pragma once
 
 #include <optional>
-#include <vector>
 #include <ncurses.h>
+#include <panel.h>
 
 #include "glyph.h"
 
@@ -14,6 +14,16 @@ class Editor {
         std::optional<Glyph> editGlyph(Glyph glyph);
 
     private:
-        std::vector<WINDOW*> windows;
+        static PANEL* createDefaultPanel();
+
+        enum ActiveWindow {
+            EDITOR_PANEL,
+            OVERVIEW_PANEL,
+            HELP_PANEL,
+            DEFAULT_PANEL,
+            ActiveWindowSIZE,
+        };
+
+        PANEL* m_panels[ActiveWindow::ActiveWindowSIZE] = {};
 };
 

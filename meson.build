@@ -11,6 +11,7 @@ src_inc = include_directories('src')
 deps = [
   dependency('readline'),
   dependency('ncurses'),
+  dependency('panel')
 ]
 
 subdir('src')
