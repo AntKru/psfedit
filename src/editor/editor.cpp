@@ -3,6 +3,7 @@
 #include <string>
 
 #include "editor.h"
+#include "defaultWindow.h"
 #include "helpWindow.h"
 
 Editor::Editor() {
@@ -16,17 +17,11 @@ Editor::Editor() {
     box(messageWin, 0, 0);
     mvwprintw(messageWin, 1, 1, "%s", message.c_str());
     wrefresh(messageWin);
-    m_panels[DEFAULT_PANEL] = createDefaultPanel();
-    m_panels[HELP_PANEL] = HelpWindow::create();
+    m_windows.at(DEFAULT_PANEL) = std::make_unique<DefaultWindow>();
+    m_windows.at(HELP_PANEL) = std::make_unique<HelpWindow>();
 }
 
 Editor::~Editor() {
-    for (size_t i = 0; i < ActiveWindowSIZE; i++) {
-        WINDOW* win = panel_window(m_panels[i]);
-        del_panel(m_panels[i]);
-        delwin(win);
-    }
-    refresh();
     endwin();
 }
 
@@ -34,18 +29,23 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
     clear();
     ActiveWindow activeWindow = DEFAULT_PANEL;
     ActiveWindow lastActiveWindow = DEFAULT_PANEL;
-    top_panel(m_panels[DEFAULT_PANEL]);
+    top_panel(m_windows.at(DEFAULT_PANEL)->getPanel());
 
     while (true) {
+        for (const auto& windowp : m_windows) {
+            if (windowp) {
+                windowp->update();
+            }
+        }
         update_panels();
         doupdate();
-        int ch = wgetch(panel_window(m_panels[activeWindow]));
+        int ch = wgetch(m_windows.at(activeWindow)->getWindow());
         switch (ch) {
             case 'h':
                 if (activeWindow != HELP_PANEL) {
                     lastActiveWindow = activeWindow;
                     activeWindow = HELP_PANEL;
-                    top_panel(m_panels[HELP_PANEL]);
+                    top_panel(m_windows.at(activeWindow)->getPanel());
                 }
                 break;
             case 'q':
@@ -56,29 +56,13 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
                     ActiveWindow old = activeWindow;
                     activeWindow = lastActiveWindow;
                     lastActiveWindow = old;
-                    top_panel(m_panels[activeWindow]);
+                    top_panel(m_windows.at(activeWindow)->getPanel());
                 }
                 break;
             default:
+                m_windows.at(activeWindow)->handleKey(ch);
                 break;
         }
     }
-}
-
-PANEL* Editor::createDefaultPanel() {
-    const int y = getmaxy(stdscr);
-    const int x = getmaxx(stdscr);
-    WINDOW* const win = newwin(y, x, 0, 0);
-    wattron(win, A_REVERSE);
-    move(0, 0);
-    wprintw (win, "Editor (press \"h\" for help)");
-    int cursorY, cursorX;
-    getyx(win, cursorY, cursorX);
-    while (cursorY == 0) {
-        waddch(win, ' ');
-        getyx(win, cursorY, cursorX);
-    }
-    wattroff(win, A_REVERSE);
-    return new_panel(win);
 }
 

@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 #pragma once
 
+#include <array>
+#include <memory>
 #include <optional>
 #include <ncurses.h>
 #include <panel.h>
 
+#include "window.h"
 #include "glyph.h"
 
 class Editor {
@@ -14,8 +17,6 @@ class Editor {
         std::optional<Glyph> editGlyph(Glyph glyph);
 
     private:
-        static PANEL* createDefaultPanel();
-
         enum ActiveWindow {
             EDITOR_PANEL,
             OVERVIEW_PANEL,
@@ -24,6 +25,6 @@ class Editor {
             ActiveWindowSIZE,
         };
 
-        PANEL* m_panels[ActiveWindow::ActiveWindowSIZE] = {};
+        std::array<std::unique_ptr<Window>, ActiveWindowSIZE> m_windows;
 };
 

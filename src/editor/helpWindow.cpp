@@ -2,12 +2,11 @@
 
 #include "helpWindow.h"
 
-PANEL* HelpWindow::create() {
-    int y, x;
-    getmaxyx(stdscr, y, x);
-    WINDOW* win = newwin(y - 4, x - 4, 2, 2);
-    box(win, 0, 0);
-    wprintw(win, "Help");
-    return new_panel(win);
+void HelpWindow::update() {
+    Window::update();
+    wresize(m_win, m_y - 4, m_x - 4);
+    move_panel(m_panel, 2, 2);
+    box(m_win, 0, 0);
+    mvwprintw(m_win, 0, 1, "Help");
 }
 

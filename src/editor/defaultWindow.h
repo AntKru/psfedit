@@ -5,10 +5,10 @@
 
 #include "window.h"
 
-class HelpWindow : public Window {
+class DefaultWindow : public Window {
     public:
-        HelpWindow() = default;
-        ~HelpWindow() = default;
+        DefaultWindow() = default;
+        ~DefaultWindow() = default;
 
         void update() override;
 };
