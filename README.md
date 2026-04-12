@@ -76,6 +76,9 @@ The basic way to use the editor is like this:
 psfedit [FILE PATH]
 ```
 This will put you in an interactive mode, where you can use the `help` command to learn how to use the editor.
+> [!IMPORTANT]
+> The help command depends on the context: After switching to editing mode using `modify`, use `help` again to see the usage instructions for the editing mode.
+
 You can also create new fonts by using `-c`/`-u` options. For more information:
 ```sh
 psfedit --help
