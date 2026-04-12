@@ -2,18 +2,20 @@
 
 #include "window.h"
 
-Window::Window() : m_win([]() -> WINDOW* {
-        const int y = getmaxy(stdscr);
-        const int x = getmaxx(stdscr);
-        return newwin(y, x, 0, 0);
-    } ()), m_panel(new_panel(m_win)) {
+Window::Window()
+    : m_wins({newwin(0, 0, 0, 0)}),
+      m_panels({new_panel(m_wins.front())}),
+      m_win(m_wins.front()),
+      m_panel(m_panels.front()) {
+    keypad(m_win, true);
     update();
 }
 
 Window::~Window() {
-    WINDOW* win = panel_window(m_panel);
-    del_panel(m_panel);
-    delwin(win);
+    for (size_t i = 0; i < m_panels.size(); i++) {
+        del_panel(m_panels.at(i));
+        delwin(m_wins.at(i));
+    }
 }
 
 void Window::handleKey(int key) {
@@ -26,11 +28,25 @@ void Window::update() {
     wmove(m_win, 0, 0);
 }
 
-WINDOW* Window::getWindow() const {
-    return m_win;
+std::vector<WINDOW*> Window::getWindows() const {
+    return m_wins;
 }
 
-PANEL* Window::getPanel() const {
-    return m_panel;
+std::vector<PANEL*> Window::getPanels() const {
+    return m_panels;
+}
+
+void Window::pushWindow(WINDOW* win) {
+    m_wins.push_back(win);
+    m_panels.push_back(new_panel(win));
+}
+
+bool Window::popWindow() {
+    if (m_panels.size() <= 1) {
+        return false;
+    }
+    m_wins.pop_back();
+    m_panels.pop_back();
+    return true;
 }
 

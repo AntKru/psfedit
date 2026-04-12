@@ -29,7 +29,7 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
     clear();
     ActiveWindow activeWindow = DEFAULT_PANEL;
     ActiveWindow lastActiveWindow = DEFAULT_PANEL;
-    top_panel(m_windows.at(DEFAULT_PANEL)->getPanel());
+    setActiveWindow(*m_windows.at(DEFAULT_PANEL));
 
     while (true) {
         for (const auto& windowp : m_windows) {
@@ -39,13 +39,13 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
         }
         update_panels();
         doupdate();
-        int ch = wgetch(m_windows.at(activeWindow)->getWindow());
+        int ch = wgetch(m_windows.at(activeWindow)->getWindows().front());
         switch (ch) {
             case 'h':
                 if (activeWindow != HELP_PANEL) {
                     lastActiveWindow = activeWindow;
                     activeWindow = HELP_PANEL;
-                    top_panel(m_windows.at(activeWindow)->getPanel());
+                    setActiveWindow(*m_windows.at(activeWindow));
                 }
                 break;
             case 'q':
@@ -56,13 +56,19 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
                     ActiveWindow old = activeWindow;
                     activeWindow = lastActiveWindow;
                     lastActiveWindow = old;
-                    top_panel(m_windows.at(activeWindow)->getPanel());
+                    setActiveWindow(*m_windows.at(activeWindow));
                 }
                 break;
             default:
                 m_windows.at(activeWindow)->handleKey(ch);
                 break;
         }
+    }
+}
+
+void Editor::setActiveWindow(const Window& window) {
+    for (PANEL* panel : window.getPanels()) {
+        top_panel(panel);
     }
 }
 

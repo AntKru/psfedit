@@ -26,5 +26,7 @@ class Editor {
         };
 
         std::array<std::unique_ptr<Window>, ActiveWindowSIZE> m_windows;
+
+        void setActiveWindow(const Window& window);
 };
 
