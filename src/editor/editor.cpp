@@ -44,7 +44,7 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
         doupdate();
         int ch = wgetch(m_windows.at(activeWindow)->getWindows().front());
         switch (ch) {
-            case 'h':
+            case '?':
                 if (activeWindow != HELP_PANEL) {
                     activeWindow = HELP_PANEL;
                 } else {

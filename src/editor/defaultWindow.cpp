@@ -6,7 +6,7 @@ void DefaultWindow::update() {
     Window::update();
     wattron(m_win, A_REVERSE);
     wmove(m_win, 0, 0);
-    wprintw (m_win, "Editor (press \"h\" for help)");
+    wprintw (m_win, "Editor (press \"?\" for help)");
     int cursorY, cursorX;
     getyx(m_win, cursorY, cursorX);
     while (cursorY == 0) {

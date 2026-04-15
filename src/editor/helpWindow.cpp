@@ -44,7 +44,7 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"j, arrow key down", "Select next item"},
     {"k, arrow key up", "Select previous item"},
     {"General:", ""},
-    {"h", "Show this help"},
+    {"?", "Show this help"},
     {"q", "Quit current view. If the current view is the default view, quit editor"},
     {"o", "Open overview"},
 };
