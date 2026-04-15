@@ -29,7 +29,7 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
                     modified ? "\033[31m*" : "").c_str());
         if (line == nullptr) {
             // do not save changes
-            return glyph;
+            return {};
         }
         if (*line) {
             add_history(line);

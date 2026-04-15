@@ -7,13 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Hints
+
 ### Changed
 
 - Usability improvements in the prompt
 
-### Added
+### Fixed
 
-- Hints
+- When using ^D to exit editing mode, the unsaved indicator is not shown
 
 ## [1.0.1] - 2026-04-08
 
