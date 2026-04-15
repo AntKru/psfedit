@@ -40,13 +40,17 @@ void HelpWindow::handleKey(int key) {
 }
 
 std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
-    {"Menus:", ""},
-    {"j, arrow key down", "Select next item"},
-    {"k, arrow key up", "Select previous item"},
+    {"Navigation:", ""},
+    {"j, arrow key down", "Select next item / down"},
+    {"k, arrow key up", "Select previous item / up"},
+    {"h, arrow key left", "left"},
+    {"l, arrow key right", "right"},
     {"General:", ""},
     {"?", "Show this help"},
     {"q", "Quit current view. If the current view is the default view, quit editor"},
     {"o", "Open overview"},
+    {"Overview:", ""},
+    {"r", "Reset translation"},
 };
 
 ITEM** const HelpWindow::s_items = []() -> ITEM** {
