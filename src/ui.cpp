@@ -11,6 +11,12 @@
 void printGlyphLine(const std::vector<bool>& line, bool highlight = false, bool shrink = false);
 
 std::pair<UI::Command, std::string> UI::getCommand(bool saved) {
+    static bool firstRun = true;
+    if (firstRun) {
+        std::println("Hint: Type \"help\" to get started");
+        std::println("Note: ^D exits always without saving");
+        firstRun = false;
+    }
     rl_attempted_completion_function = UI::menuCompletion;
     static std::vector<std::pair<UI::Command, std::string>> commandQueue;
     if (!commandQueue.empty()) {
@@ -20,7 +26,7 @@ std::pair<UI::Command, std::string> UI::getCommand(bool saved) {
     }
     while (true) {
         char* line = readline(
-            std::format("\033[36mtype h for help>{}\033[0m ", saved ? "" : "\033[31m*").c_str());
+            std::format("\033[34m(psfedit){}\033[0m ", saved ? "" : "\033[31m*").c_str());
         if (line == nullptr) {
             return {Command::EXIT, ""};
         }
@@ -130,7 +136,7 @@ const std::vector<std::pair<std::string, std::string>> UI::menuCommands = {
     {"quit", "q, quit: leave witout saving"},
     {"wq", "wq: quit and save"},
     {"show", "s, show [character]: show glyph"},
-    {"modify", "m, modify [character]: edit glyph interactively"},
+    {"modify", "m, modify [character]: switch to editing mode and edit specified glyph"},
     {"header", "header: show font header"},
     {"add", "a, add: add new glyph (no unicode table)"},
     {"addu", "au, addu [character]: add new glyph (font with unicode table)"},

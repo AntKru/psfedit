@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-#include <cmath>
 #include <print>
 #include <sstream>
 #include <readline/readline.h>
@@ -9,6 +8,7 @@
 #include "editor.h"
 
 std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
+    static bool firstRun = true;
     rl_attempted_completion_function = Editor::editorCompletion;
     Glyph newGlyph(glyph);
     std::vector<Glyph> editorHistory;
@@ -20,8 +20,12 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
             Viewer::showGlyphs({glyph, newGlyph});
         }
         preview = true;
-        char* line = readline(std::format("\033[36mEditing mode{}>{}\033[0m ",
-                    erase ? "[e]" : "",
+        if (firstRun) {
+            std::println("Hint: Since you are in editing mode, the list of available commands has changed. You can use \"help\" to see the now available commands.");
+            firstRun = false;
+        }
+        char* line = readline(std::format("\033[34m(EDITING MODE{}){}\033[0m ",
+                    erase ? " [e]" : "",
                     modified ? "\033[31m*" : "").c_str());
         if (line == nullptr) {
             // do not save changes
