@@ -18,9 +18,8 @@ class Editor {
 
     private:
         enum ActiveWindow {
-            EDITOR_PANEL,
-            OVERVIEW_PANEL,
             HELP_PANEL,
+            OVERVIEW_PANEL,
             DEFAULT_PANEL,
             ActiveWindowSIZE,
         };

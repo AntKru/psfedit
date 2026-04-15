@@ -46,6 +46,7 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"General:", ""},
     {"h", "Show this help"},
     {"q", "Quit current view. If the current view is the default view, quit editor"},
+    {"o", "Open overview"},
 };
 
 ITEM** const HelpWindow::s_items = []() -> ITEM** {

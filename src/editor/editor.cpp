@@ -4,6 +4,7 @@
 
 #include "editor.h"
 #include "defaultWindow.h"
+#include "overviewWindow.h"
 #include "helpWindow.h"
 
 Editor::Editor() {
@@ -19,6 +20,7 @@ Editor::Editor() {
     wrefresh(messageWin);
     m_windows.at(DEFAULT_PANEL) = std::make_unique<DefaultWindow>();
     m_windows.at(HELP_PANEL) = std::make_unique<HelpWindow>();
+    m_windows.at(OVERVIEW_PANEL) = std::make_unique<OverviewWindow>();
 }
 
 Editor::~Editor() {
@@ -28,7 +30,6 @@ Editor::~Editor() {
 std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
     clear();
     ActiveWindow activeWindow = DEFAULT_PANEL;
-    ActiveWindow lastActiveWindow = DEFAULT_PANEL;
     setActiveWindow(*m_windows.at(DEFAULT_PANEL));
 
     while (true) {
@@ -43,21 +44,26 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
         switch (ch) {
             case 'h':
                 if (activeWindow != HELP_PANEL) {
-                    lastActiveWindow = activeWindow;
                     activeWindow = HELP_PANEL;
-                    setActiveWindow(*m_windows.at(activeWindow));
+                } else {
+                    activeWindow = DEFAULT_PANEL;
                 }
+                setActiveWindow(*m_windows.at(activeWindow));
+                break;
+            case 'o':
+                if (activeWindow != OVERVIEW_PANEL) {
+                    activeWindow = OVERVIEW_PANEL;
+                } else {
+                    activeWindow = DEFAULT_PANEL;
+                }
+                setActiveWindow(*m_windows.at(activeWindow));
                 break;
             case 'q':
                 if (activeWindow == DEFAULT_PANEL) {
                     return {};
                 }
-                if (activeWindow != lastActiveWindow) {
-                    ActiveWindow old = activeWindow;
-                    activeWindow = lastActiveWindow;
-                    lastActiveWindow = old;
-                    setActiveWindow(*m_windows.at(activeWindow));
-                }
+                activeWindow = DEFAULT_PANEL;
+                setActiveWindow(*m_windows.at(activeWindow));
                 break;
             default:
                 m_windows.at(activeWindow)->handleKey(ch);

@@ -8,5 +8,6 @@ src = files(
   'editor/window.cpp',
   'editor/defaultWindow.cpp',
   'editor/helpWindow.cpp',
+  'editor/overviewWindow.cpp',
 )
 
