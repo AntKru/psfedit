@@ -15,7 +15,7 @@ void OverviewWindow::update() {
     mvwprintw(m_win, 0, 1, "Overview");
     if (m_glyph) {
         size_t currentY = 0;
-        for (size_t y = m_cursorY; y < std::min(static_cast<size_t>(m_glyph->getHeight()), (win_y - 2) * 2); y += 2) {
+        for (size_t y = m_cursorY; y < static_cast<size_t>(m_glyph->getHeight()) && currentY < win_y - 2; y += 2) {
             wmove(m_win, currentY + 1, 1);
             currentY++;
             size_t x = m_cursorX;
@@ -32,7 +32,7 @@ void OverviewWindow::update() {
                     wprintw(m_win, "%s", bit == m_glyph->getBit(x, y + 1) ? " " : "▄");
                 }
             }
-            if (x < win_x - 2) {
+            if (x - m_cursorX < win_x - 2) {
                 wprintw(m_win, "#");
             }
         }
