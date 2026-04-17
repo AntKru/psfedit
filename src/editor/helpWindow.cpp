@@ -61,6 +61,9 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"space", "Place marker"},
     {"t", "Toggle selected pixel"},
     {"e", "Toggle eraser. The eraser inverts the following commands"},
+    {"1", "Draw a line between the markers"},
+    {"2", "Draw a rectangle between the markers"},
+    {"0", "Clear the drawing area. If eraser is on, fill it instead"},
 };
 
 ITEM** const HelpWindow::s_items = []() -> ITEM** {

@@ -124,6 +124,27 @@ void DefaultWindow::handleKey(int key) {
             updateHistory();
             break;
 
+        case '1':
+            if (m_glyph && areMarkersSet()) {
+                m_glyph->drawLine(m_marker1X - 1, m_marker1Y - 1, m_marker2X - 1, m_marker2Y - 1, !m_eraser);
+            }
+            updateHistory();
+            break;
+
+        case '2':
+            if (m_glyph && areMarkersSet()) {
+                m_glyph->fill(m_marker1X - 1, m_marker1Y - 1, m_marker2X - 1, m_marker2Y - 1, !m_eraser);
+            }
+            updateHistory();
+            break;
+
+        case '0':
+            if (m_glyph) {
+                m_glyph->clear(m_eraser);
+            }
+            updateHistory();
+            break;
+
         case 'u':
             undo();
             break;
@@ -142,6 +163,10 @@ void DefaultWindow::setGlyph(const Glyph& glyph) {
 
 std::optional<Glyph> DefaultWindow::getGlyph() {
     return m_glyph;
+}
+
+bool DefaultWindow::areMarkersSet() {
+    return m_marker1X && m_marker1Y && m_marker2X && m_marker2Y;
 }
 
 void DefaultWindow::updateHistory() {

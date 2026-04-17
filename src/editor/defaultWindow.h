@@ -30,6 +30,7 @@ class DefaultWindow : public Window {
         std::vector<Glyph> m_history;
         std::vector<Glyph> m_redo_history;
 
+        bool areMarkersSet();
         void updateHistory();
         void undo();
         void redo();
