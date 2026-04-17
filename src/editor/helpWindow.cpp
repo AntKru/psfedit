@@ -20,7 +20,7 @@ HelpWindow::~HelpWindow() {
 
 void HelpWindow::update() {
     Window::update();
-    wresize(m_win, m_y - 4, m_x - 4);
+    wresize(m_win, std::min(m_y - 4, 18), m_x - 4);
     move_panel(m_panel, 2, 2);
     box(m_win, 0, 0);
     mvwprintw(m_win, 0, 1, "Help");
@@ -55,8 +55,12 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"q", "Quit current view. If the current view is the default view, quit editor"},
     {"o", "Open overview"},
     {"Editor:", ""},
+    {"u", "Undo"},
+    {"U", "Redo"},
     {"b", "Toggle pixel borders"},
     {"space", "Place marker"},
+    {"t", "Toggle selected pixel"},
+    {"e", "Toggle eraser. The eraser inverts the following commands"},
 };
 
 ITEM** const HelpWindow::s_items = []() -> ITEM** {

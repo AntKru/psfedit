@@ -15,7 +15,9 @@ void DefaultWindow::update() {
     int cursorY, cursorX;
     getyx(m_win, cursorY, cursorX);
 #pragma GCC diagnostic pop
-    std::string statusString = std::format(" {}:{} ", m_vcursorX + 1, m_vcursorY + 1);
+    std::string statusString = std::format(" {}{}:{} ",
+            m_eraser ? "[E] " : "",
+            m_vcursorX + 1, m_vcursorY + 1);
     for (size_t i = 0; i < m_x - cursorX - statusString.size(); i++) {
         waddch(m_win, ' ');
     }
@@ -110,14 +112,58 @@ void DefaultWindow::handleKey(int key) {
             }
             m_currentMarkerIs2 = !m_currentMarkerIs2;
             break;
+
+        case 'e':
+            m_eraser = !m_eraser;
+            break;
+
+        case 't':
+            if (m_glyph) {
+                m_glyph->setBit(m_vcursorX, m_vcursorY, !m_glyph->getBit(m_vcursorX, m_vcursorY));
+            }
+            updateHistory();
+            break;
+
+        case 'u':
+            undo();
+            break;
+
+        case 'U':
+            redo();
+            break;
     }
 }
 
 void DefaultWindow::setGlyph(const Glyph& glyph) {
     m_glyph = glyph;
+    m_history.clear();
+    updateHistory();
 }
 
 std::optional<Glyph> DefaultWindow::getGlyph() {
     return m_glyph;
+}
+
+void DefaultWindow::updateHistory() {
+    if (m_glyph) {
+        m_history.push_back(*m_glyph);
+        m_redo_history.clear();
+    }
+}
+
+void DefaultWindow::undo() {
+    if (m_history.size() >= 2) {
+        m_redo_history.push_back(m_history.back());
+        m_history.pop_back();
+        m_glyph = m_history.back();
+    }
+}
+
+void DefaultWindow::redo() {
+    if (!m_redo_history.empty()) {
+        m_glyph = m_redo_history.back();
+        m_redo_history.pop_back();
+        m_history.push_back(*m_glyph);
+    }
 }
 

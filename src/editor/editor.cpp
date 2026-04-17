@@ -33,12 +33,12 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
     OverviewWindow& overviewWindow = dynamic_cast<OverviewWindow&>(*m_windows.at(OVERVIEW_PANEL));
     ActiveWindow activeWindow = DEFAULT_PANEL;
     setActiveWindow(*m_windows.at(DEFAULT_PANEL));
+    defaultWindow.setGlyph(glyph);
 
     while (true) {
         if (auto result = defaultWindow.getGlyph()) {
             glyph = *result;
         }
-        defaultWindow.setGlyph(glyph);
         overviewWindow.setGlyph(glyph);
 
         clear();
