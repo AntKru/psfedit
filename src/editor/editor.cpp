@@ -13,7 +13,7 @@ Editor::Editor() {
     noecho();
     keypad(stdscr, true);
     curs_set(0);
-    std::string message = "Editor initialized, waiting for glyph";
+    std::string message = "Your window might be too small";
     WINDOW* messageWin = newwin(3, message.size() + 2, 0, 0);
     box(messageWin, 0, 0);
     mvwprintw(messageWin, 1, 1, "%s", message.c_str());
@@ -31,6 +31,7 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
     ActiveWindow activeWindow = DEFAULT_PANEL;
     setActiveWindow(*m_windows.at(DEFAULT_PANEL));
 
+    dynamic_cast<DefaultWindow&>(*m_windows.at(DEFAULT_PANEL)).setGlyph(glyph);
     dynamic_cast<OverviewWindow&>(*m_windows.at(OVERVIEW_PANEL)).setGlyph(glyph);
 
     while (true) {

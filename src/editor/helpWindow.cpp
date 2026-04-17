@@ -36,6 +36,10 @@ void HelpWindow::handleKey(int key) {
         case KEY_UP:
             menu_driver(m_menu, REQ_UP_ITEM);
             break;
+
+        case 'r':
+            menu_driver(m_menu, REQ_FIRST_ITEM);
+            break;
     }
 }
 
@@ -45,12 +49,13 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"k, arrow key up", "Select previous item / up"},
     {"h, arrow key left", "left"},
     {"l, arrow key right", "right"},
+    {"r", "Reset position"},
     {"General:", ""},
     {"?", "Show this help"},
     {"q", "Quit current view. If the current view is the default view, quit editor"},
     {"o", "Open overview"},
-    {"Overview:", ""},
-    {"r", "Reset translation"},
+    {"Editor:", ""},
+    {"b", "Toggle pixel borders"},
 };
 
 ITEM** const HelpWindow::s_items = []() -> ITEM** {
