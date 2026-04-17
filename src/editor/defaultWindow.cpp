@@ -14,14 +14,14 @@ void DefaultWindow::update() {
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
     int cursorY, cursorX;
     getyx(m_win, cursorY, cursorX);
-    std::string statusString = std::format("{}{}:{} ",
-            m_glyph ? "glyph loaded " : "",
-            m_cursorX, m_cursorY);
 #pragma GCC diagnostic pop
+    std::string statusString = std::format(" {}:{} ", m_vcursorX + 1, m_vcursorY + 1);
     for (size_t i = 0; i < m_x - cursorX - statusString.size(); i++) {
         waddch(m_win, ' ');
     }
+    wattron(m_win, COLOR_PAIR(C_UI));
     wprintw(m_win, "%s", statusString.c_str());
+    wattroff(m_win, COLOR_PAIR(C_UI));
     wattroff(m_win, A_REVERSE);
 
     // Draw glyph
@@ -31,16 +31,31 @@ void DefaultWindow::update() {
             wmove(m_win, y, 0);
             int x = m_winRootX;
             for (; x < std::min(static_cast<int>(m_glyph->getWidth()), (m_x - 1) / 2); x++) {
+                char pixel[] = "  ";
+                if (m_borders) {
+                    pixel[0] = '[';
+                    pixel[1] = ']';
+                }
                 if (m_glyph->getBit(x, y)) {
                     wattron(m_win, A_REVERSE);
                 }
-                if (m_cursorY == static_cast<size_t>(y) && m_cursorX == static_cast<size_t>(x)) {
-                    wprintw(m_win, "* ");
-                } else if (m_highlight){
-                    wprintw(m_win, "[]");
-                } else {
-                    wprintw(m_win, "  ");
+                if (m_vcursorY == static_cast<size_t>(y) && m_vcursorX == static_cast<size_t>(x)) {
+                    wattron(m_win, COLOR_PAIR(C_CURSOR));
+                    pixel[0] = '*';
                 }
+
+                if (y == m_marker1Y - 1 && x == m_marker1X - 1) {
+                    pixel[1] = '1';
+                    wattron(m_win, COLOR_PAIR(C_SELECTED));
+                }
+                if (y == m_marker2Y - 1 && x == m_marker2X - 1) {
+                    pixel[1] = '2';
+                    wattron(m_win, COLOR_PAIR(C_SELECTED));
+                }
+
+                wprintw(m_win, "%s", pixel);
+                wattroff(m_win, COLOR_PAIR(C_CURSOR));
+                wattroff(m_win, COLOR_PAIR(C_SELECTED));
                 wattroff(m_win, A_REVERSE);
             }
             if (x < (m_x - 1) / 2) {
@@ -59,31 +74,50 @@ void DefaultWindow::handleKey(int key) {
     switch (key) {
         case 'j':
         case KEY_DOWN:
-            m_cursorY = std::min(m_cursorY + 1, static_cast<size_t>(m_glyph->getHeight() - 1));
+            m_vcursorY = std::min(m_vcursorY + 1, static_cast<size_t>(m_glyph->getHeight() - 1));
             break;
         case 'k':
         case KEY_UP:
-            m_cursorY = std::min(m_cursorY, m_cursorY - 1);
+            m_vcursorY = std::min(m_vcursorY, m_vcursorY - 1);
             break;
         case 'h':
         case KEY_LEFT:
-            m_cursorX = std::min(m_cursorX, m_cursorX - 1);
+            m_vcursorX = std::min(m_vcursorX, m_vcursorX - 1);
             break;
         case 'l':
         case KEY_RIGHT:
-            m_cursorX = std::min(m_cursorX + 1, static_cast<size_t>(m_glyph->getWidth() - 1));
+            m_vcursorX = std::min(m_vcursorX + 1, static_cast<size_t>(m_glyph->getWidth() - 1));
             break;
 
         case 'r':
-            m_cursorX = m_cursorY = 0;
+            m_vcursorX = m_vcursorY = 0;
             m_winRootX = m_winRootY = 0;
+            m_marker1X = m_marker1Y = 0;
+            m_marker2X = m_marker2Y = 0;
+            break;
 
         case 'b':
-            m_highlight = !m_highlight;
+            m_borders = !m_borders;
+            break;
+
+        case ' ':
+            if (m_currentMarkerIs2) {
+                m_marker2Y = m_vcursorY + 1;
+                m_marker2X = m_vcursorX + 1;
+            } else {
+                m_marker1Y = m_vcursorY + 1;
+                m_marker1X = m_vcursorX + 1;
+            }
+            m_currentMarkerIs2 = !m_currentMarkerIs2;
+            break;
     }
 }
 
 void DefaultWindow::setGlyph(const Glyph& glyph) {
     m_glyph = glyph;
+}
+
+std::optional<Glyph> DefaultWindow::getGlyph() {
+    return m_glyph;
 }
 

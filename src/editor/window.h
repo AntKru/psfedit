@@ -14,6 +14,12 @@ class Window {
         std::vector<WINDOW*> getWindows() const;
         std::vector<PANEL*> getPanels() const;
 
+        enum ColorPairs {
+            C_SELECTED = 1,
+            C_CURSOR = 2,
+            C_UI = 3,
+        };
+
     private:
         std::vector<WINDOW*> m_wins;
         std::vector<PANEL*> m_panels;

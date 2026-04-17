@@ -13,6 +13,7 @@ Editor::Editor() {
     noecho();
     keypad(stdscr, true);
     curs_set(0);
+    start_color();
     std::string message = "Your window might be too small";
     WINDOW* messageWin = newwin(3, message.size() + 2, 0, 0);
     box(messageWin, 0, 0);
@@ -28,13 +29,18 @@ Editor::~Editor() {
 }
 
 std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
+    DefaultWindow& defaultWindow = dynamic_cast<DefaultWindow&>(*m_windows.at(DEFAULT_PANEL));
+    OverviewWindow& overviewWindow = dynamic_cast<OverviewWindow&>(*m_windows.at(OVERVIEW_PANEL));
     ActiveWindow activeWindow = DEFAULT_PANEL;
     setActiveWindow(*m_windows.at(DEFAULT_PANEL));
 
-    dynamic_cast<DefaultWindow&>(*m_windows.at(DEFAULT_PANEL)).setGlyph(glyph);
-    dynamic_cast<OverviewWindow&>(*m_windows.at(OVERVIEW_PANEL)).setGlyph(glyph);
-
     while (true) {
+        if (auto result = defaultWindow.getGlyph()) {
+            glyph = *result;
+        }
+        defaultWindow.setGlyph(glyph);
+        overviewWindow.setGlyph(glyph);
+
         clear();
         for (const auto& windowp : m_windows) {
             if (windowp) {

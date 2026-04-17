@@ -56,6 +56,7 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"o", "Open overview"},
     {"Editor:", ""},
     {"b", "Toggle pixel borders"},
+    {"space", "Place marker"},
 };
 
 ITEM** const HelpWindow::s_items = []() -> ITEM** {
