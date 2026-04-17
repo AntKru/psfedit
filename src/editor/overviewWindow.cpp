@@ -23,14 +23,13 @@ void OverviewWindow::update() {
                 bool bit = m_glyph->getBit(x, y);
                 if (bit) {
                     wattron(m_win, A_REVERSE);
-                } else {
-                    wattroff(m_win, A_REVERSE);
                 }
                 if (y + 1 >= m_glyph->getHeight()) {
                     wprintw(m_win, "%s", bit ? "▄" : " ");
                 } else {
                     wprintw(m_win, "%s", bit == m_glyph->getBit(x, y + 1) ? " " : "▄");
                 }
+                wattroff(m_win, A_REVERSE);
             }
             if (x - m_cursorX < win_x - 2) {
                 wprintw(m_win, "#");
