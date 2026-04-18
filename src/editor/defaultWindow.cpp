@@ -29,10 +29,10 @@ void DefaultWindow::update() {
     // Draw glyph
     if (m_glyph) {
         int y = m_winRootY;
-        for (; y < std::min(static_cast<int>(m_glyph->getHeight()), m_y - 1); y++) {
-            wmove(m_win, y, 0);
+        for (; y < std::min(static_cast<int>(m_glyph->getHeight()), m_y - 1 + m_winRootY); y++) {
+            wmove(m_win, y - m_winRootY, 0);
             int x = m_winRootX;
-            for (; x < std::min(static_cast<int>(m_glyph->getWidth()), (m_x - 1) / 2); x++) {
+            for (; x < std::min(static_cast<int>(m_glyph->getWidth()), m_x / 2 + m_winRootX); x++) {
                 char pixel[] = "  ";
                 if (m_borders) {
                     pixel[0] = '[';
@@ -41,7 +41,7 @@ void DefaultWindow::update() {
                 if (m_glyph->getBit(x, y)) {
                     wattron(m_win, A_REVERSE);
                 }
-                if (m_vcursorY == static_cast<size_t>(y) && m_vcursorX == static_cast<size_t>(x)) {
+                if (m_vcursorY == y && m_vcursorX == x) {
                     wattron(m_win, COLOR_PAIR(C_CURSOR));
                     pixel[0] = '*';
                 }
@@ -76,19 +76,19 @@ void DefaultWindow::handleKey(int key) {
     switch (key) {
         case 'j':
         case KEY_DOWN:
-            m_vcursorY = std::min(m_vcursorY + 1, static_cast<size_t>(m_glyph->getHeight() - 1));
+            updateVCursor(1, 0);
             break;
         case 'k':
         case KEY_UP:
-            m_vcursorY = std::min(m_vcursorY, m_vcursorY - 1);
+            updateVCursor(-1, 0);
             break;
         case 'h':
         case KEY_LEFT:
-            m_vcursorX = std::min(m_vcursorX, m_vcursorX - 1);
+            updateVCursor(0, -1);
             break;
         case 'l':
         case KEY_RIGHT:
-            m_vcursorX = std::min(m_vcursorX + 1, static_cast<size_t>(m_glyph->getWidth() - 1));
+            updateVCursor(0, 1);
             break;
 
         case 'r':
@@ -167,6 +167,15 @@ std::optional<Glyph> DefaultWindow::getGlyph() {
 
 bool DefaultWindow::areMarkersSet() {
     return m_marker1X && m_marker1Y && m_marker2X && m_marker2Y;
+}
+
+void DefaultWindow::updateVCursor(int y, int x) {
+    if (m_glyph) {
+        m_vcursorY = std::clamp(m_vcursorY + y, 0, static_cast<int>(m_glyph->getHeight() - 1));
+        m_vcursorX = std::clamp(m_vcursorX + x, 0, static_cast<int>(m_glyph->getWidth() - 1));
+        m_winRootY = std::clamp(m_winRootY, std::max(0, m_vcursorY - m_y + 2), m_vcursorY);
+        m_winRootX = std::clamp(m_winRootX, std::max(0, m_vcursorX - m_x / 2 + 1), m_vcursorX);
+    }
 }
 
 void DefaultWindow::updateHistory() {
