@@ -77,6 +77,7 @@ The basic way to use the editor is like this:
 psfedit [FILE PATH]
 ```
 This will put you in an interactive mode, where you can use the `help` command to learn how to use the editor.
+After entering editing mode with `m [character]`, press `?` to open the help window. You can scroll down to see all keybinds.
 You can also create new fonts by using `-c`/`-u` options. For more information:
 ```sh
 psfedit --help
@@ -86,3 +87,4 @@ You might have to `gunzip` them.
 
 ## Used libraries
  - GNU readline (GPLv3): https://tiswww.cwru.edu/php/chet/readline/rltop.html
+ - ncurses (X11 License): https://invisible-island.net/ncurses/
