@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
             }
             try {
                 newFileHeight = std::stoi(argv[i + 1]);
-                newFileHeight = std::stoi(argv[i + 2]);
+                newFileWidth = std::stoi(argv[i + 2]);
             } catch (const std::out_of_range& e) {
                 std::println(stderr, "Invalid width and/or height!");
             }
