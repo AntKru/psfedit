@@ -19,6 +19,7 @@ class DefaultWindow : public Window {
         std::optional<Glyph> getGlyph();
 
     private:
+        mmask_t m_oldmask;
         bool m_borders = false;
         bool m_eraser = false;
         int m_vcursorY = 0, m_vcursorX = 0;
@@ -30,6 +31,7 @@ class DefaultWindow : public Window {
         std::vector<Glyph> m_history;
         std::vector<Glyph> m_redo_history;
 
+        void handleMouse();
         bool areMarkersSet();
         void updateVCursor(int y, int x);
         void updateHistory();

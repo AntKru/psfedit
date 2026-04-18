@@ -20,5 +20,7 @@ class HelpWindow : public Window {
 
         static std::vector<std::pair<std::string, std::string>> s_helpList;
         static ITEM** const s_items;
+
+        void handleMouse();
 };
 

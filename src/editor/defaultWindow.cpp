@@ -152,6 +152,10 @@ void DefaultWindow::handleKey(int key) {
         case 'U':
             redo();
             break;
+
+        case KEY_MOUSE:
+            handleMouse();
+            break;
     }
 }
 
@@ -163,6 +167,35 @@ void DefaultWindow::setGlyph(const Glyph& glyph) {
 
 std::optional<Glyph> DefaultWindow::getGlyph() {
     return m_glyph;
+}
+
+void DefaultWindow::handleMouse() {
+    if (m_glyph) {
+        MEVENT event;
+        if (getmouse(&event) == OK
+            && event.y == std::clamp(event.y, 1, static_cast<int>(m_glyph->getHeight() * 2))
+            && event.x == std::clamp(event.x, 1, static_cast<int>(m_glyph->getWidth() * 2))
+            ) {
+            if (event.bstate & BUTTON1_CLICKED) {
+                m_marker1Y = event.y + 1 + m_winRootY;
+                m_marker1X = event.x / 2 + 1 + m_winRootX;
+            }
+            if (event.bstate & BUTTON3_CLICKED) {
+                m_marker2Y = event.y + 1 + m_winRootY;
+                m_marker2X = event.x / 2 + 1 + m_winRootX;
+            }
+            if (event.bstate & BUTTON4_PRESSED) {
+                if (m_winRootY > 0) {
+                    m_winRootY--;
+                }
+            }
+            if (event.bstate & BUTTON5_PRESSED) {
+                if (m_winRootY <= static_cast<int>(m_glyph->getWidth() - 1)) {
+                    m_winRootY++;
+                }
+            }
+        }
+    }
 }
 
 bool DefaultWindow::areMarkersSet() {

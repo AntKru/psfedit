@@ -40,6 +40,10 @@ void HelpWindow::handleKey(int key) {
         case 'r':
             menu_driver(m_menu, REQ_FIRST_ITEM);
             break;
+
+        case KEY_MOUSE:
+            handleMouse();
+            break;
     }
 }
 
@@ -59,6 +63,8 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"U", "Redo"},
     {"b", "Toggle pixel borders"},
     {"space", "Place marker"},
+    {"left mouse button", "Place first marker"},
+    {"right mouse button", "Place second marker"},
     {"t", "Toggle selected pixel"},
     {"e", "Toggle eraser. The eraser inverts the following commands"},
     {"1", "Draw a line between the markers"},
@@ -78,4 +84,16 @@ ITEM** const HelpWindow::s_items = []() -> ITEM** {
     }
     return items;
 } ();
+
+void HelpWindow::handleMouse() {
+    MEVENT event;
+    if (getmouse(&event) == OK) {
+        if (event.bstate & BUTTON4_PRESSED) {
+            menu_driver(m_menu, REQ_SCR_ULINE);
+        }
+        if (event.bstate & BUTTON5_PRESSED) {
+            menu_driver(m_menu, REQ_SCR_DLINE);
+        }
+    }
+}
 
