@@ -15,7 +15,7 @@ Editor::Editor() {
     curs_set(0);
     start_color();
     mmask_t oldmask;
-    mousemask(BUTTON1_CLICKED | BUTTON3_CLICKED | BUTTON4_PRESSED | BUTTON5_PRESSED, &oldmask);
+    mousemask(BUTTON1_CLICKED | BUTTON2_CLICKED | BUTTON3_CLICKED | BUTTON4_PRESSED | BUTTON5_PRESSED, &oldmask);
     mouseinterval(0);
     std::string message = "Your window might be too small";
     WINDOW* messageWin = newwin(3, message.size() + 2, 0, 0);

@@ -173,8 +173,8 @@ void DefaultWindow::handleMouse() {
     if (m_glyph) {
         MEVENT event;
         if (getmouse(&event) == OK
-            && event.y == std::clamp(event.y, 1, static_cast<int>(m_glyph->getHeight() * 2))
-            && event.x == std::clamp(event.x, 1, static_cast<int>(m_glyph->getWidth() * 2))
+            && event.y == std::clamp(event.y, 0, static_cast<int>(m_glyph->getHeight() * 2) - 1)
+            && event.x == std::clamp(event.x, 0, static_cast<int>(m_glyph->getWidth() * 2) - 1)
             ) {
             if (event.bstate & BUTTON1_CLICKED) {
                 m_marker1Y = event.y + 1 + m_winRootY;
@@ -183,6 +183,10 @@ void DefaultWindow::handleMouse() {
             if (event.bstate & BUTTON3_CLICKED) {
                 m_marker2Y = event.y + 1 + m_winRootY;
                 m_marker2X = event.x / 2 + 1 + m_winRootX;
+            }
+            if (event.bstate & BUTTON2_CLICKED) {
+                m_vcursorY = event.y + m_winRootY;
+                m_vcursorX = event.x / 2 + m_winRootX;
             }
             if (event.bstate & BUTTON4_PRESSED) {
                 if (m_winRootY > 0) {
