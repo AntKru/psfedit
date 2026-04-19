@@ -47,7 +47,6 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
         }
         overviewWindow.setGlyph(glyph);
 
-        clear();
         for (const auto& windowp : m_windows) {
             if (windowp) {
                 windowp->update();

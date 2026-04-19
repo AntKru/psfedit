@@ -5,6 +5,7 @@
 
 void DefaultWindow::update() {
     Window::update();
+    wclear(m_win);
 
     // Status line
     wattron(m_win, A_REVERSE);
@@ -68,7 +69,7 @@ void DefaultWindow::update() {
             }
         }
         if (y < m_y - 1) {
-            wmove(m_win, y, 0);
+            wmove(m_win, y - m_winRootY, 0);
             std::string line(std::min(m_x, static_cast<int>(m_glyph->getWidth() - m_winRootX) * 2 + 1), '#');
             wprintw(m_win, "%s", line.c_str());
         }
@@ -201,7 +202,7 @@ void DefaultWindow::handleMouse() {
                 }
             }
             if (event.bstate & BUTTON5_PRESSED) {
-                if (m_winRootY <= static_cast<int>(m_glyph->getWidth() - 1)) {
+                if (m_winRootY <= static_cast<int>(m_glyph->getHeight() - 1)) {
                     m_winRootY++;
                 }
             }
