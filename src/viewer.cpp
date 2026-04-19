@@ -65,13 +65,5 @@ bool Viewer::printGlyphLine(const Glyph& glyph, size_t lineNumber) {
         }
     }
     return true;
-    //for (const bool fg : line) {
-    //    if (shrink) {
-    //        std::cout << (fg ? "\033[7m:\033[27m" : ":");
-    //    } else {
-    //        std::cout << (fg ? "\033[7m· \033[27m" : "· ");
-    //    }
-    //}
-    //std::cout << "\033[0m";
 }
 

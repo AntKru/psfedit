@@ -78,6 +78,7 @@ psfedit [FILE PATH]
 ```
 This will put you in an interactive mode, where you can use the `help` command to learn how to use the editor.
 After entering editing mode with `m [character]`, press `?` to open the help window. You can scroll down to see all keybinds.
+
 You can also create new fonts by using `-c`/`-u` options. For more information:
 ```sh
 psfedit --help
