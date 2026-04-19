@@ -74,6 +74,14 @@ void OverviewWindow::handleKey(int key) {
                 m_cursorX = std::min(m_cursorX + 1, static_cast<size_t>(m_glyph->getWidth()));
                 break;
 
+            case 'g':
+                m_cursorY = 0;
+                break;
+
+            case 'G':
+                m_cursorY = m_glyph->getHeight() - m_y + 7;
+                break;
+
             case 'r':
                 m_cursorX = m_cursorY = 0;
                 m_zoom = 2;

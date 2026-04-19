@@ -78,28 +78,71 @@ void DefaultWindow::update() {
 
 void DefaultWindow::handleKey(int key) {
     switch (key) {
+        // down
         case 'j':
         case KEY_DOWN:
             updateVCursor(1, 0);
             break;
+        case 'J':
+        case KEY_SF:
+            updateVCursor(5, 0);
+            break;
+        case 10: // ^J
+        case 537:
+            updateVCursor(10, 0);
+            break;
+        // up
         case 'k':
         case KEY_UP:
             updateVCursor(-1, 0);
             break;
+        case 'K':
+        case KEY_SR:
+            updateVCursor(-5, 0);
+            break;
+        case 11: // ^K
+        case 578:
+            updateVCursor(-10, 0);
+            break;
+        // left
         case 'h':
         case KEY_LEFT:
             updateVCursor(0, -1);
             break;
+        case 'H':
+        case KEY_SLEFT:
+            updateVCursor(0, -5);
+            break;
+        case 8: // ^H
+        case 557:
+            updateVCursor(0, -10);
+            break;
+        // right
         case 'l':
         case KEY_RIGHT:
             updateVCursor(0, 1);
             break;
+        case 'L':
+        case KEY_SRIGHT:
+            updateVCursor(0, 5);
+            break;
+        case 12: // ^L
+        case 572:
+            updateVCursor(0, 10);
+            break;
 
         case 'r':
-            m_vcursorX = m_vcursorY = 0;
-            m_winRootX = m_winRootY = 0;
             m_marker1X = m_marker1Y = 0;
             m_marker2X = m_marker2Y = 0;
+            m_winRootX = m_vcursorX = 0;
+        case 'g':
+            m_winRootY = m_vcursorY = 0;
+            break;
+
+        case 'G':
+            if (m_glyph) {
+                updateVCursor(m_glyph->getHeight() - 1, 0);
+            }
             break;
 
         case 'b':

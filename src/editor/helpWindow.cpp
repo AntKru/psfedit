@@ -37,9 +37,13 @@ void HelpWindow::handleKey(int key) {
             menu_driver(m_menu, REQ_UP_ITEM);
             break;
 
+        case 'g':
         case 'r':
             menu_driver(m_menu, REQ_FIRST_ITEM);
             break;
+
+        case 'G':
+            menu_driver(m_menu, REQ_LAST_ITEM);
 
         case KEY_MOUSE:
             handleMouse();
@@ -53,19 +57,24 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"k, arrow key up", "Select previous item / up"},
     {"h, arrow key left", "left"},
     {"l, arrow key right", "right"},
-    {"r", "Reset position"},
+    {"g", "Go to top"},
+    {"G", "Go to bottom"},
     {"General:", ""},
     {"?", "Show this help"},
     {"q", "Quit current view. If the current view is the default view, quit editor"},
     {"o", "Open overview"},
-    {"Editor:", ""},
-    {"u", "Undo"},
-    {"U", "Redo"},
+    {"r", "Reset view"},
+    {"Editor - Navigation:", ""},
+    {"Nav. keys + shift", "Fast movement"},
+    {"Nav. keys + ctrl", "Very fast movement"},
     {"b", "Toggle pixel borders"},
+    {"scroll wheel button", "Move cursor to pointer location"},
+    {"Editor - editing:", ""},
     {"space", "Place marker"},
     {"left mouse button", "Place first marker"},
     {"right mouse button", "Place second marker"},
-    {"scroll wheel button", "Move cursor to pointer location"},
+    {"u", "Undo"},
+    {"U", "Redo"},
     {"t", "Toggle selected pixel"},
     {"e", "Toggle eraser. The eraser inverts the following commands"},
     {"1", "Draw a line between the markers"},
