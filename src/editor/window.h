@@ -18,6 +18,7 @@ class Window {
             C_SELECTED = 1,
             C_CURSOR = 2,
             C_UI = 3,
+            C_IMPORTANT = 4,
         };
 
     private:

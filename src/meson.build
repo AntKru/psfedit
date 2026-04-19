@@ -9,5 +9,6 @@ src = files(
   'editor/defaultWindow.cpp',
   'editor/helpWindow.cpp',
   'editor/overviewWindow.cpp',
+  'editor/saveWindow.cpp',
 )
 

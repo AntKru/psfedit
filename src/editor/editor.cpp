@@ -6,6 +6,7 @@
 #include "defaultWindow.h"
 #include "overviewWindow.h"
 #include "helpWindow.h"
+#include "saveWindow.h"
 
 Editor::Editor() {
     initscr();
@@ -25,6 +26,7 @@ Editor::Editor() {
     m_windows.at(DEFAULT_PANEL) = std::make_unique<DefaultWindow>();
     m_windows.at(HELP_PANEL) = std::make_unique<HelpWindow>();
     m_windows.at(OVERVIEW_PANEL) = std::make_unique<OverviewWindow>();
+    m_windows.at(SAVE_PANEL) = std::make_unique<SaveWindow>();
 }
 
 Editor::~Editor() {
@@ -34,11 +36,12 @@ Editor::~Editor() {
 std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
     DefaultWindow& defaultWindow = dynamic_cast<DefaultWindow&>(*m_windows.at(DEFAULT_PANEL));
     OverviewWindow& overviewWindow = dynamic_cast<OverviewWindow&>(*m_windows.at(OVERVIEW_PANEL));
+    SaveWindow& saveWindow = dynamic_cast<SaveWindow&>(*m_windows.at(SAVE_PANEL));
     ActiveWindow activeWindow = DEFAULT_PANEL;
     setActiveWindow(*m_windows.at(DEFAULT_PANEL));
     defaultWindow.setGlyph(glyph);
 
-    while (true) {
+    while (saveWindow.getAction() == SaveWindow::Action::PENDING) {
         if (auto result = defaultWindow.getGlyph()) {
             glyph = *result;
         }
@@ -72,9 +75,14 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
                 break;
             case 'q':
                 if (activeWindow == DEFAULT_PANEL) {
-                    return {};
+                    if (defaultWindow.changed()) {
+                        activeWindow = SAVE_PANEL;
+                    } else {
+                        saveWindow.setAction(SaveWindow::Action::FORCE_QUIT);
+                    }
+                } else {
+                    activeWindow = DEFAULT_PANEL;
                 }
-                activeWindow = DEFAULT_PANEL;
                 setActiveWindow(*m_windows.at(activeWindow));
                 break;
             default:
@@ -82,6 +90,12 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
                 break;
         }
     }
+
+    if (saveWindow.getAction() == SaveWindow::Action::SAVE_QUIT) {
+        return defaultWindow.getGlyph();
+    }
+
+    return {};
 }
 
 void Editor::setActiveWindow(const Window& window) {

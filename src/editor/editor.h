@@ -21,6 +21,7 @@ class Editor {
             HELP_PANEL,
             OVERVIEW_PANEL,
             DEFAULT_PANEL,
+            SAVE_PANEL,
             ActiveWindowSIZE,
         };
 

@@ -17,6 +17,7 @@ class DefaultWindow : public Window {
 
         void setGlyph(const Glyph& glyph);
         std::optional<Glyph> getGlyph();
+        bool changed();
 
     private:
         mmask_t m_oldmask;

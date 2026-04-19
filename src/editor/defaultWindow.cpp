@@ -10,6 +10,9 @@ void DefaultWindow::update() {
     wattron(m_win, A_REVERSE);
     wmove(m_win, m_y - 1, 0);
     wprintw (m_win, "Editor (press \"?\" for help)");
+    if (changed()) {
+        waddch(m_win, '*' | COLOR_PAIR(C_IMPORTANT));
+    }
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
     int cursorY, cursorX;
@@ -167,6 +170,10 @@ void DefaultWindow::setGlyph(const Glyph& glyph) {
 
 std::optional<Glyph> DefaultWindow::getGlyph() {
     return m_glyph;
+}
+
+bool DefaultWindow::changed() {
+    return m_history.size() > 1;
 }
 
 void DefaultWindow::handleMouse() {
