@@ -71,6 +71,9 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"1", "Draw a line between the markers"},
     {"2", "Draw a rectangle between the markers"},
     {"0", "Clear the drawing area. If eraser is on, fill it instead"},
+    {"Overview:", ""},
+    {"+", "Zoom in"},
+    {"-", "Zoom out. Will be shown with incorrect aspect ratio"},
 };
 
 ITEM** const HelpWindow::s_items = []() -> ITEM** {

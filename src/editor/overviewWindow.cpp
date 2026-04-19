@@ -15,21 +15,31 @@ void OverviewWindow::update() {
     mvwprintw(m_win, 0, 1, "Overview");
     if (m_glyph) {
         size_t currentY = 0;
-        for (size_t y = m_cursorY; y < static_cast<size_t>(m_glyph->getHeight()) && currentY < win_y - 2; y += 2) {
+        unsigned int lineLength = 0;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+        int tmpY;
+#pragma GCC diagnostic pop
+        for (size_t y = m_cursorY; y < static_cast<size_t>(m_glyph->getHeight()) && currentY < win_y - 2; y += m_zoom) {
             wmove(m_win, currentY + 1, 1);
             currentY++;
             size_t x = m_cursorX;
-            for (; x < std::min(static_cast<size_t>(m_glyph->getWidth()), win_x - 2); x++) {
+            for (; x < std::min(static_cast<size_t>(m_glyph->getWidth()), win_x - 2); x += std::max(m_zoom / 2, 1zu)) {
                 bool bit = m_glyph->getBit(x, y);
                 if (bit) {
                     wattron(m_win, A_REVERSE);
                 }
-                if (y + 1 >= m_glyph->getHeight()) {
-                    wprintw(m_win, "%s", bit ? "▄" : " ");
+                if (m_zoom >= 2) {
+                    if (y + m_zoom / 2 >= m_glyph->getHeight()) {
+                        wprintw(m_win, "%s", bit ? "▄" : " ");
+                    } else {
+                        wprintw(m_win, "%s", bit == m_glyph->getBit(x, y + m_zoom / 2) ? " " : "▄");
+                    }
                 } else {
-                    wprintw(m_win, "%s", bit == m_glyph->getBit(x, y + 1) ? " " : "▄");
+                    wprintw(m_win, "  ");
                 }
                 wattroff(m_win, A_REVERSE);
+                getyx(m_win, tmpY, lineLength);
             }
             if (x - m_cursorX < win_x - 2) {
                 wprintw(m_win, "#");
@@ -37,7 +47,7 @@ void OverviewWindow::update() {
         }
         if (currentY < win_y - 2) {
             wmove(m_win, currentY + 1, 1);
-            for (size_t x = m_cursorX; x < std::min(static_cast<size_t>(m_glyph->getWidth() + 1), win_x - 2); x++) {
+            for (size_t x = 0; x < lineLength; x++) {
                 wprintw(m_win, "#");
             }
         }
@@ -66,6 +76,39 @@ void OverviewWindow::handleKey(int key) {
 
             case 'r':
                 m_cursorX = m_cursorY = 0;
+                m_zoom = 2;
+                break;
+
+            case '+':
+                if (m_zoom > 1) {
+                    m_zoom--;
+                }
+                break;
+
+            case '-':
+                if (m_zoom < 6) {
+                    m_zoom++;
+                }
+                break;
+
+            case KEY_MOUSE:
+                handleMouse();
+                break;
+        }
+    }
+}
+
+void OverviewWindow::handleMouse() {
+    MEVENT event;
+    if (getmouse(&event) == OK
+        && event.y == std::clamp(event.y, 2, m_y - 2)
+        && event.x == std::clamp(event.x, 2, m_x - 2)
+        ) {
+        if (event.bstate & BUTTON4_PRESSED) {
+            m_cursorY = std::min(m_cursorY, m_cursorY - 1);
+        }
+        if (event.bstate & BUTTON5_PRESSED) {
+            m_cursorY = std::min(m_cursorY + 1, static_cast<size_t>(m_glyph->getHeight()));
         }
     }
 }
