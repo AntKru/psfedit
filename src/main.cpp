@@ -115,16 +115,28 @@ int main(int argc, char** argv) {
                 break;
             case UI::Command::ADD_GLYPH_UNICODE:
                 if (!psf->addGlyphUnicode(command.second)) {
-                    std::println("Could not add glyph {}", command.second);
+                    std::println("Could not add glyph {}: This font has no unicode table", command.second);
+                    std::println("Use \"add\" instead");
                 } else {
                     saved = false;
                 }
                 break;
             case UI::Command::ADD_GLYPH_NO_UNICODE:
-                if (!psf->addGlyphNoUnicode()) {
-                    std::println("Could not add glyph");
-                } else {
-                    saved = false;
+                {
+                    size_t count = 1;
+                    try {
+                        count = std::stoi(command.second);
+                    } catch (const std::invalid_argument& e) {}
+                    size_t i = 0;
+                    for (; i < count; i++) {
+                        if (!psf->addGlyphNoUnicode()) {
+                            std::println("Could not add glyph: This font has a unicode table");
+                            std::println("Hint: Use \"addu\" instead");
+                            break;
+                        }
+                        saved = false;
+                    }
+                    std::println("Successfully added {} {}", i, i == 1 ? "glyph" : "glyphs");
                 }
                 break;
             case UI::Command::LIST:

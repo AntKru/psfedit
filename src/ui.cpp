@@ -138,7 +138,7 @@ const std::vector<std::pair<std::string, std::string>> UI::menuCommands = {
     {"show", "s, show [character]: show glyph"},
     {"modify", "m, modify [character]: switch to editing mode and edit specified glyph"},
     {"header", "header: show font header"},
-    {"add", "a, add: add new glyph (no unicode table)"},
+    {"add", "a, add [n]: add n new glyphs (no unicode table). If no count is specified, 1 is used"},
     {"addu", "au, addu [character]: add new glyph (font with unicode table)"},
     {"list", "ls, list: list all characters included in this font"},
     {"llist", "ll, llist: ls but with more details"},
