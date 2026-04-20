@@ -79,6 +79,7 @@ std::vector<std::pair<std::string, std::string>> HelpWindow::s_helpList = {
     {"e", "Toggle eraser. The eraser inverts the following commands"},
     {"1", "Draw a line between the markers"},
     {"2", "Draw a rectangle between the markers"},
+    {"3", "Draw a circle. Marker 1 is the origin and it's distance to marker 2 the radius"},
     {"0", "Clear the drawing area. If eraser is on, fill it instead"},
     {"Overview:", ""},
     {"+", "Zoom in"},

@@ -38,9 +38,12 @@ const unsigned char* Glyph::getBitmap() const {
     return m_bitmap;
 }
 
-bool Glyph::getBit(const size_t x, const size_t y) const {
+bool Glyph::getBit(const size_t x, const size_t y, bool fail) const {
     if (x >= m_width || y >= m_height) {
-        throw std::out_of_range(std::format("{} {} is not in the bitmap of size {} {}", x, y, m_width, m_height));
+        if (fail) {
+            throw std::out_of_range(std::format("{} {} is not in the bitmap of size {} {}", x, y, m_width, m_height));
+        }
+        return false;
     }
     const unsigned int bytesPerGlyphLine = (m_width + 7) / 8;
     const size_t byteNum = x / 8;
@@ -48,9 +51,12 @@ bool Glyph::getBit(const size_t x, const size_t y) const {
     return m_bitmap[y * bytesPerGlyphLine + byteNum] & mask ;
 }
 
-void Glyph::setBit(const size_t x, const size_t y, const bool bit) {
+void Glyph::setBit(const size_t x, const size_t y, const bool bit, bool fail) {
     if (x >= m_width || y >= m_height) {
-        throw std::out_of_range(std::format("{} {} is not in the bitmap of size {} {}", x, y, m_width, m_height));
+        if (fail) {
+            throw std::out_of_range(std::format("{} {} is not in the bitmap of size {} {}", x, y, m_width, m_height));
+        }
+        return;
     }
     const unsigned int bytesPerGlyphLine = (m_width + 7) / 8;
     const size_t byteNum = x / 8;
@@ -90,6 +96,29 @@ void Glyph::drawLine(size_t x1, size_t y1, size_t x2, size_t y2, bool bit) {
             plotLine(x2, y2, x1, y1, true, bit);
         } else {
             plotLine(x1, y1, x2, y2, true, bit);
+        }
+    }
+}
+
+void Glyph::drawCircle(size_t x, size_t y, size_t radius, bool bit) {
+    int t1 = radius / 16;
+    int pointX = radius;
+    int pointY = 0;
+    while (pointY <= pointX) {
+        setBit(x + pointX, y + pointY, true, false);
+        setBit(x - pointX, y - pointY, true, false);
+        setBit(x - pointX, y + pointY, true, false);
+        setBit(x + pointX, y - pointY, true, false);
+        setBit(x + pointY, y + pointX, true, false);
+        setBit(x - pointY, y - pointX, true, false);
+        setBit(x - pointY, y + pointX, true, false);
+        setBit(x + pointY, y - pointX, true, false);
+        pointY++;
+        t1 += pointY;
+        int t2 = t1 - pointX;
+        if (t2 >= 0) {
+            t1 = t2;
+            pointX--;
         }
     }
 }

@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "defaultWindow.h"
+
 #include <format>
+#include <cmath>
 
 void DefaultWindow::update() {
     Window::update();
@@ -181,6 +183,16 @@ void DefaultWindow::handleKey(int key) {
         case '2':
             if (m_glyph && areMarkersSet()) {
                 m_glyph->fill(m_marker1X - 1, m_marker1Y - 1, m_marker2X - 1, m_marker2Y - 1, !m_eraser);
+                updateHistory();
+            }
+            break;
+
+        case '3':
+            if (m_glyph && areMarkersSet()) {
+                size_t radius = std::sqrt(std::pow((double)m_marker1X - (double)m_marker2X, 2) + std::pow((double)m_marker1Y - (double)m_marker2Y, 2));;
+                try {
+                m_glyph->drawCircle(m_marker1X - 1, m_marker1Y - 1, radius, !m_eraser);
+                } catch (const std::out_of_range& e) {}
                 updateHistory();
             }
             break;
