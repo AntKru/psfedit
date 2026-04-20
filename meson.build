@@ -6,6 +6,7 @@ project('psfedit', 'cpp',
 )
 
 meson.add_dist_script('scripts/version.sh', 'set_dist', meson.project_version())
+meson.add_install_script('scripts/linux_bundler.sh')
 
 src_inc = include_directories('src')
 deps = [
