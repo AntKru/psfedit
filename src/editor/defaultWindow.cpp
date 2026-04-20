@@ -50,10 +50,11 @@ void DefaultWindow::update() {
                 if (m_vcursorY == y && m_vcursorX == x) {
                     wattron(m_win, COLOR_PAIR(C_CURSOR));
                     pixel[0] = '*';
+                    pixel[1] = '*';
                 }
 
                 if (y == m_marker1Y - 1 && x == m_marker1X - 1) {
-                    pixel[1] = '1';
+                    pixel[0] = '1';
                     wattron(m_win, COLOR_PAIR(C_SELECTED));
                 }
                 if (y == m_marker2Y - 1 && x == m_marker2X - 1) {
@@ -151,15 +152,14 @@ void DefaultWindow::handleKey(int key) {
             m_borders = !m_borders;
             break;
 
-        case ' ':
-            if (m_currentMarkerIs2) {
-                m_marker2Y = m_vcursorY + 1;
-                m_marker2X = m_vcursorX + 1;
-            } else {
-                m_marker1Y = m_vcursorY + 1;
-                m_marker1X = m_vcursorX + 1;
-            }
-            m_currentMarkerIs2 = !m_currentMarkerIs2;
+        case ',':
+            m_marker1Y = m_vcursorY + 1;
+            m_marker1X = m_vcursorX + 1;
+            break;
+
+        case '.':
+            m_marker2Y = m_vcursorY + 1;
+            m_marker2X = m_vcursorX + 1;
             break;
 
         case 'e':
