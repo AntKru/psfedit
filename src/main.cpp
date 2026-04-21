@@ -11,7 +11,6 @@
 #include "config.h"
 
 int main(int argc, char** argv) {
-    setlocale(LC_ALL, "");
     if (argc < 2) {
         std::println("Usage: {} [OPTIONS] [FILE PATH]", argv[0]);
         return EXIT_SUCCESS;

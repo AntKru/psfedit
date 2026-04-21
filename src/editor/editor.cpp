@@ -9,6 +9,7 @@
 #include "saveWindow.h"
 
 Editor::Editor() {
+    setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();
