@@ -7,7 +7,7 @@
 #include "psf.h"
 #include "ui.h"
 #include "viewer.h"
-#include "editor.h"
+#include "editor/editor.h"
 #include "config.h"
 
 int main(int argc, char** argv) {
@@ -94,7 +94,8 @@ int main(int argc, char** argv) {
                 break;
             case UI::Command::EDIT:
                 try {
-                    std::optional<Glyph> glyph = Editor::editGlyph(psf->getGlyph(command.second));
+                    Editor editor;
+                    std::optional<Glyph> glyph = editor.editGlyph(psf->getGlyph(command.second));
                     if (glyph) {
                         psf->setGlyph(command.second, *glyph);
                         saved = false;

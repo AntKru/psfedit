@@ -4,6 +4,11 @@ src = files(
   'glyph.cpp',
   'ui.cpp',
   'viewer.cpp',
-  'editor.cpp',
+  'editor/editor.cpp',
+  'editor/window.cpp',
+  'editor/defaultWindow.cpp',
+  'editor/helpWindow.cpp',
+  'editor/overviewWindow.cpp',
+  'editor/saveWindow.cpp',
 )
 

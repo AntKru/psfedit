@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New editor based on ncurses
+- Drawing of circles
+
 ### Changed
 
 - "add" command can now add multiple glyphs at once

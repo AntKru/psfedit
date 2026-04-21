@@ -136,7 +136,7 @@ const std::vector<std::pair<std::string, std::string>> UI::menuCommands = {
     {"quit", "q, quit: leave witout saving"},
     {"wq", "wq: quit and save"},
     {"show", "s, show [character]: show glyph"},
-    {"modify", "m, modify [character]: switch to editing mode and edit specified glyph"},
+    {"modify", "m, modify [character]: open character in editor"},
     {"header", "header: show font header"},
     {"add", "a, add [n]: add n new glyphs (no unicode table). If no count is specified, 1 is used"},
     {"addu", "au, addu [character]: add new glyph (font with unicode table)"},

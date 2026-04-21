@@ -10,6 +10,9 @@ meson.add_dist_script('scripts/version.sh', 'set_dist', meson.project_version())
 src_inc = include_directories('src')
 deps = [
   dependency('readline'),
+  dependency('ncursesw', version : '>=6'),
+  dependency('panelw'),
+  dependency('menuw'),
 ]
 
 subdir('src')
