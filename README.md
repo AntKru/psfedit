@@ -4,22 +4,31 @@ A basic psf2 font editor and viewer.
 
 ## Screenshots
 
+### CLI
 <img width="566" height="180" alt="image" src="https://github.com/user-attachments/assets/72de53fb-c8c5-4645-a099-89c4538e367c" />
 
-### Viewer
 <img width="198" height="121" alt="image" src="https://github.com/user-attachments/assets/5ad2c5c8-2e02-4671-a6f7-e12b437d4d49" />
 
 ### Editor
-<img width="256" height="238" alt="image" src="https://github.com/user-attachments/assets/0b8b3cbc-56bd-4fb3-8871-807309996394" />
+### Main screen
+<img width="1897" height="951" alt="image" src="https://github.com/user-attachments/assets/c5a92c3d-a20b-473c-a632-450edc817cef" />
+### Help Window
+<img width="1884" height="500" alt="image" src="https://github.com/user-attachments/assets/1aefdc4a-7020-4821-995f-75355e7ea21c" />
+### Overview screen
+<img width="1884" height="887" alt="image" src="https://github.com/user-attachments/assets/d18fa420-ade9-4b88-b800-dade9b3dd6a4" />
 
 ## Installation
-**For Linux users on x86_64:**
+ - [x86_64 Linux](#linux-users-on-x86_64)
+ - [Other operating systems](compile-it-yourself)
+### Linux users on x86_64
 You can find compiled binaries at the [releases page](https://github.com/AntKru/psfedit/releases).
 The binary is in the bin directory inside the archive.
-You still have to install GNU readline and ncurses.
+> [!NOTE]
+> You still have to install GNU readline and ncurses.
+
 After that you can skip to [Usage](#Usage)
 
-**For eveyone else:**
+### Compile it yourself
 You have to compile it on your own, but here is a simple guide.
 I have tested it on Debian trixie and Arch.
 You have to install
@@ -47,7 +56,7 @@ meson setup build
 cd build
 meson compile
 ```
-> [!IMPORTANT]
+> [!TIP]
 > If it does not work, make sure that
 >  - You have a compiler with C++23 support (see https://en.wikipedia.org/wiki/C%2B%2B23#Compiler_support)
 >  - You are in the directory of the downloaded source code (not the `src` directory)
