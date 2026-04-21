@@ -19,7 +19,7 @@ A basic psf2 font editor and viewer.
 
 ## Installation
  - [x86_64 Linux](#linux-users-on-x86_64)
- - [Other operating systems](compile-it-yourself)
+ - [Other operating systems](#compile-it-yourself)
 ### Linux users on x86_64
 You can find compiled binaries at the [releases page](https://github.com/AntKru/psfedit/releases).
 The binary is in the bin directory inside the archive.
