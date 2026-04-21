@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- New editor based on ncurses
 - Drawing of circles
 
 ## [1.0.3] - 2026-04-19
