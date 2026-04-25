@@ -2,11 +2,12 @@
 #pragma once
 
 #include <string>
+#include <map>
 #include <unordered_map>
 
 class Theme {
     public:
-        static bool setTheme(const std::string& theme);
+        static bool setTheme(std::string theme);
 
         enum ColorPairs {
             C_RESERVED,
@@ -21,6 +22,6 @@ class Theme {
 
         using Colorscheme = std::unordered_map<ColorPairs, std::pair<short, short>>;
 
-        static std::unordered_map<std::string, Colorscheme> colorschemes;
+        static std::map<std::string, Colorscheme> colorschemes;
 };
 
