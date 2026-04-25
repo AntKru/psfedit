@@ -24,7 +24,11 @@ bool Theme::setTheme(std::string theme) {
         colorsInitialized = true;
     }
     if (useFallback) {
-        theme = (theme == "light") ? "light-fallback" : "default-fallback";
+        if (theme == "default") {
+            theme = "default-fallback";
+        } else  if (theme == "light") {
+            theme = "light-fallback";
+        }
     }
     if (colorschemes.find(theme) == colorschemes.end()) {
         return false;
