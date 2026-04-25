@@ -31,6 +31,9 @@ bool Theme::setTheme(std::string theme) {
         }
     }
     if (colorschemes.find(theme) == colorschemes.end()) {
+        if (theme != "default-fallback") {
+            setTheme("default-fallback");
+        }
         return false;
     }
     Colorscheme colorscheme = colorschemes.at(theme);
