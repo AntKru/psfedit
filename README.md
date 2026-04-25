@@ -12,8 +12,10 @@ A basic psf2 font editor and viewer.
 ### Editor
 ### Main screen
 <img width="1897" height="951" alt="image" src="https://github.com/user-attachments/assets/c5a92c3d-a20b-473c-a632-450edc817cef" />
+
 ### Help Window
 <img width="1884" height="500" alt="image" src="https://github.com/user-attachments/assets/1aefdc4a-7020-4821-995f-75355e7ea21c" />
+
 ### Overview screen
 <img width="1884" height="887" alt="image" src="https://github.com/user-attachments/assets/d18fa420-ade9-4b88-b800-dade9b3dd6a4" />
 
