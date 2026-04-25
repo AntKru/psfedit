@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "helpWindow.h"
+#include "theme.h"
 
 HelpWindow::HelpWindow() {
     update();
@@ -10,6 +11,9 @@ HelpWindow::HelpWindow() {
     pushWindow(derwin(m_win, winy - 1, winx - 1, 1, 1));
     set_menu_win(m_menu, m_win);
     set_menu_sub(m_menu, getWindows().back());
+    set_menu_fore(m_menu, COLOR_PAIR(Theme::C_PRIMARY));
+    set_menu_back(m_menu, COLOR_PAIR(Theme::C_TERTIARY));
+    set_menu_grey(m_menu, COLOR_PAIR(Theme::C_SECONDARY));
     post_menu(m_menu);
 }
 

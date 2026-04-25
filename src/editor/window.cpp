@@ -27,6 +27,7 @@ void Window::update() {
     m_x = getmaxx(stdscr);
     wresize(m_win, m_y, m_x);
     wmove(m_win, 0, 0);
+    wbkgd(m_win, COLOR_PAIR(Theme::C_TERTIARY));
     wattron(m_win, COLOR_PAIR(Theme::C_TERTIARY));
 }
 
