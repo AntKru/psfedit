@@ -19,6 +19,7 @@ class Editor {
     private:
         enum ActiveWindow {
             HELP_PANEL,
+            THEME_PANEL,
             OVERVIEW_PANEL,
             DEFAULT_PANEL,
             SAVE_PANEL,

@@ -7,6 +7,7 @@
 #include "overviewWindow.h"
 #include "helpWindow.h"
 #include "saveWindow.h"
+#include "themeWindow.h"
 #include "theme.h"
 
 Editor::Editor(const std::string& theme) {
@@ -28,6 +29,7 @@ Editor::Editor(const std::string& theme) {
     wrefresh(messageWin);
     m_windows.at(DEFAULT_PANEL) = std::make_unique<DefaultWindow>();
     m_windows.at(HELP_PANEL) = std::make_unique<HelpWindow>();
+    m_windows.at(THEME_PANEL) = std::make_unique<ThemeWindow>();
     m_windows.at(OVERVIEW_PANEL) = std::make_unique<OverviewWindow>();
     m_windows.at(SAVE_PANEL) = std::make_unique<SaveWindow>();
 }
@@ -62,6 +64,14 @@ std::optional<Glyph> Editor::editGlyph(Glyph glyph) {
             case '?':
                 if (activeWindow != HELP_PANEL) {
                     activeWindow = HELP_PANEL;
+                } else {
+                    activeWindow = DEFAULT_PANEL;
+                }
+                setActiveWindow(*m_windows.at(activeWindow));
+                break;
+            case 't':
+                if (activeWindow != THEME_PANEL) {
+                    activeWindow = THEME_PANEL;
                 } else {
                     activeWindow = DEFAULT_PANEL;
                 }
