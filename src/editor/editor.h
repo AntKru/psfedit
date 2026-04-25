@@ -7,14 +7,12 @@
 #include <ncurses.h>
 #include <panel.h>
 
-#include "theme.h"
 #include "window.h"
 #include "glyph.h"
 
 class Editor {
     public:
-        Editor();
-        Editor(const Theme& theme);
+        Editor(const std::string& theme);
         ~Editor();
         std::optional<Glyph> editGlyph(Glyph glyph);
 

@@ -8,6 +8,7 @@
 #include "ui.h"
 #include "viewer.h"
 #include "editor/editor.h"
+#include "editor/theme.h"
 #include "config.h"
 
 int main(int argc, char** argv) {
@@ -21,7 +22,7 @@ int main(int argc, char** argv) {
     bool newFileUnicode = false;
     uint32_t newFileHeight = 12;
     uint32_t newFileWidth = 8;
-    std::string theme;
+    std::string theme = "default";
     bool noFile = true;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -35,6 +36,7 @@ int main(int argc, char** argv) {
             std::println("-c, --create [height] [width]: create a new file");
             std::println("-u, --create-unicode [height] [width]: like --create, but with unicode table");
             std::println("-t, --theme [theme]: set editor theme");
+            std::println("--list-themes: list available themes");
             return EXIT_SUCCESS;
         } else if (arg == "-v" || arg == "--version") {
             std::println("psfedit {}", VERSION_STR);
@@ -62,6 +64,11 @@ int main(int argc, char** argv) {
                 theme = argv[i + 1];
             }
             i++;
+        } else if (arg == "--list-themes") {
+            for (const auto& theme : Theme::colorschemes) {
+                std::println("{}", theme.first);
+            }
+            return EXIT_SUCCESS;
         } else if (i != argc - 1) {
             std::println("Unknown argument: {}", arg);
             return EXIT_FAILURE;
@@ -111,7 +118,7 @@ int main(int argc, char** argv) {
                 break;
             case UI::Command::EDIT:
                 try {
-                    Editor editor;
+                    Editor editor(theme);
                     std::optional<Glyph> glyph = editor.editGlyph(psf->getGlyph(command.second));
                     if (glyph) {
                         psf->setGlyph(command.second, *glyph);

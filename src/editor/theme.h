@@ -6,10 +6,7 @@
 
 class Theme {
     public:
-        Theme() = default;
-        Theme(std::string name);
-        static bool setTheme(const Theme& theme);
-        static void resetTheme();
+        static bool setTheme(const std::string& theme);
 
         enum ColorPairs {
             C_RESERVED,
@@ -22,9 +19,8 @@ class Theme {
             ColorPairs_SIZE,
         };
 
-    private:
-        static Theme m_defaultTheme;
-        static short currentColorIndex;
-        std::unordered_map<ColorPairs, std::pair<short, short>> colors;
+        using Colorscheme = std::unordered_map<ColorPairs, std::pair<short, short>>;
+
+        static std::unordered_map<std::string, Colorscheme> colorschemes;
 };
 

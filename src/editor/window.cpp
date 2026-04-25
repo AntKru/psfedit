@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "window.h"
+#include "theme.h"
 
 Window::Window()
     : m_wins({newwin(0, 0, 0, 0)}),
@@ -26,6 +27,7 @@ void Window::update() {
     m_x = getmaxx(stdscr);
     wresize(m_win, m_y, m_x);
     wmove(m_win, 0, 0);
+    wattron(m_win, COLOR_PAIR(Theme::C_TERTIARY));
 }
 
 std::vector<WINDOW*> Window::getWindows() const {
