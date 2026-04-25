@@ -16,6 +16,7 @@ Editor::Editor() {
     keypad(stdscr, true);
     curs_set(0);
     start_color();
+    Theme::resetTheme();
     mmask_t oldmask;
     mousemask(BUTTON1_CLICKED | BUTTON2_CLICKED | BUTTON3_CLICKED | BUTTON4_PRESSED | BUTTON5_PRESSED, &oldmask);
     mouseinterval(0);
@@ -28,6 +29,10 @@ Editor::Editor() {
     m_windows.at(HELP_PANEL) = std::make_unique<HelpWindow>();
     m_windows.at(OVERVIEW_PANEL) = std::make_unique<OverviewWindow>();
     m_windows.at(SAVE_PANEL) = std::make_unique<SaveWindow>();
+}
+
+Editor::Editor(const Theme& theme) : Editor() {
+    Theme::setTheme(theme);
 }
 
 Editor::~Editor() {

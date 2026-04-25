@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "overviewWindow.h"
+#include "theme.h"
 
 #include <algorithm>
 
@@ -13,6 +14,7 @@ void OverviewWindow::update() {
     wclear(m_win);
     box(m_win, 0, 0);
     mvwprintw(m_win, 0, 1, "Overview");
+    wattron(m_win, COLOR_PAIR(Theme::C_TERTIARY));
     if (m_glyph) {
         size_t currentY = 0;
         unsigned int lineLength = 0;

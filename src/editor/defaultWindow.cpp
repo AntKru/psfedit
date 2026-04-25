@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 #include "defaultWindow.h"
+#include "theme.h"
 
 #include <format>
 #include <cmath>
@@ -10,11 +11,11 @@ void DefaultWindow::update() {
     wclear(m_win);
 
     // Status line
-    wattron(m_win, A_REVERSE);
+    wattron(m_win, COLOR_PAIR(Theme::C_SECONDARY));
     wmove(m_win, m_y - 1, 0);
     wprintw (m_win, "Editor (press \"?\" for help)");
     if (changed()) {
-        waddch(m_win, '*' | COLOR_PAIR(C_IMPORTANT));
+        waddch(m_win, '*' | COLOR_PAIR(Theme::C_SECONDARY_IMPORTANT));
     }
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
@@ -27,10 +28,9 @@ void DefaultWindow::update() {
     for (size_t i = 0; i < m_x - cursorX - statusString.size(); i++) {
         waddch(m_win, ' ');
     }
-    wattron(m_win, COLOR_PAIR(C_UI));
+    wattron(m_win, COLOR_PAIR(Theme::C_PRIMARY));
     wprintw(m_win, "%s", statusString.c_str());
-    wattroff(m_win, COLOR_PAIR(C_UI));
-    wattroff(m_win, A_REVERSE);
+    wattron(m_win, COLOR_PAIR(Theme::C_TERTIARY));
 
     // Draw glyph
     if (m_glyph) {
@@ -48,24 +48,23 @@ void DefaultWindow::update() {
                     wattron(m_win, A_REVERSE);
                 }
                 if (m_vcursorY == y && m_vcursorX == x) {
-                    wattron(m_win, COLOR_PAIR(C_CURSOR));
+                    wattron(m_win, COLOR_PAIR(Theme::C_TERTIARY_CURSOR));
                     pixel[0] = '*';
                     pixel[1] = '*';
                 }
 
                 if (y == m_marker1Y - 1 && x == m_marker1X - 1) {
                     pixel[0] = '1';
-                    wattron(m_win, COLOR_PAIR(C_SELECTED));
+                    wattron(m_win, COLOR_PAIR(Theme::C_TERTIARY_MARKER));
                 }
                 if (y == m_marker2Y - 1 && x == m_marker2X - 1) {
                     pixel[1] = '2';
-                    wattron(m_win, COLOR_PAIR(C_SELECTED));
+                    wattron(m_win, COLOR_PAIR(Theme::C_TERTIARY_MARKER));
                 }
 
                 wprintw(m_win, "%s", pixel);
-                wattroff(m_win, COLOR_PAIR(C_CURSOR));
-                wattroff(m_win, COLOR_PAIR(C_SELECTED));
                 wattroff(m_win, A_REVERSE);
+                wattron(m_win, COLOR_PAIR(Theme::C_TERTIARY));
             }
             if (x < (m_x - 1) / 2) {
                 waddch(m_win, '#');

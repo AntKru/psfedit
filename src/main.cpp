@@ -21,6 +21,8 @@ int main(int argc, char** argv) {
     bool newFileUnicode = false;
     uint32_t newFileHeight = 12;
     uint32_t newFileWidth = 8;
+    std::string theme;
+    bool noFile = true;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "-h" || arg == "--help") {
@@ -32,6 +34,7 @@ int main(int argc, char** argv) {
             std::println("-v, --version: show psfedit version");
             std::println("-c, --create [height] [width]: create a new file");
             std::println("-u, --create-unicode [height] [width]: like --create, but with unicode table");
+            std::println("-t, --theme [theme]: set editor theme");
             return EXIT_SUCCESS;
         } else if (arg == "-v" || arg == "--version") {
             std::println("psfedit {}", VERSION_STR);
@@ -51,10 +54,24 @@ int main(int argc, char** argv) {
             i += 2;
             newFile = true;
             newFileUnicode = (arg == "-u" || arg == "--create-unicode");
+            noFile = false;
+        } else if (arg == "-t" || arg == "--theme") {
+            if (i + 1 > argc - 1) {
+                std::println(stderr, "No theme specified!");
+            } else {
+                theme = argv[i + 1];
+            }
+            i++;
         } else if (i != argc - 1) {
             std::println("Unknown argument: {}", arg);
             return EXIT_FAILURE;
+        } else {
+            noFile = false;
         }
+    }
+    if (noFile) {
+        std::println(stderr, "No font file specified!");
+        return EXIT_FAILURE;
     }
     bool saved = true;
     if (newFile) {

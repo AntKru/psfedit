@@ -7,14 +7,6 @@ Window::Window()
       m_panels({new_panel(m_wins.front())}),
       m_win(m_wins.front()),
       m_panel(m_panels.front()) {
-    static bool pairsInitialized = false;
-    if (!pairsInitialized) {
-        init_pair(C_SELECTED, COLOR_GREEN, COLOR_BLACK);
-        init_pair(C_CURSOR, COLOR_BLUE, COLOR_BLACK);
-        init_pair(C_UI, COLOR_CYAN, COLOR_BLACK);
-        init_pair(C_IMPORTANT, COLOR_WHITE, COLOR_RED);
-        pairsInitialized = true;
-    }
     keypad(m_win, true);
     update();
 }
