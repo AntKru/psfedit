@@ -9,6 +9,10 @@
 #define CUSTOM_PRIMARY_BLUE COLOR_WHITE + 1
 #define CUSTOM_SECONDARY_BLUE COLOR_WHITE + 2
 #define CUSTOM_TERTIARY_BLUE COLOR_WHITE + 3
+#define CUSTOM_WHITE COLOR_WHITE + 4
+#define CUSTOM_BLACK COLOR_WHITE + 5
+#define CUSTOM_RED COLOR_WHITE + 6
+#define CUSTOM_GREEN COLOR_WHITE + 7
 
 bool Theme::setTheme(std::string theme) {
     static bool colorsInitialized = false;
@@ -18,6 +22,10 @@ bool Theme::setTheme(std::string theme) {
         err |= init_color(CUSTOM_PRIMARY_BLUE, RGB_TO_NCURSES(50), RGB_TO_NCURSES(160), RGB_TO_NCURSES(200));
         err |= init_color(CUSTOM_SECONDARY_BLUE, RGB_TO_NCURSES(20), RGB_TO_NCURSES(20), RGB_TO_NCURSES(30));
         err |= init_color(CUSTOM_TERTIARY_BLUE, RGB_TO_NCURSES(30), RGB_TO_NCURSES(30), RGB_TO_NCURSES(50));
+        err |= init_color(CUSTOM_WHITE, RGB_TO_NCURSES(230), RGB_TO_NCURSES(230), RGB_TO_NCURSES(250));
+        err |= init_color(CUSTOM_BLACK, RGB_TO_NCURSES(5), RGB_TO_NCURSES(5), RGB_TO_NCURSES(10));
+        err |= init_color(CUSTOM_RED, RGB_TO_NCURSES(255), RGB_TO_NCURSES(50), RGB_TO_NCURSES(50));
+        err |= init_color(CUSTOM_GREEN, RGB_TO_NCURSES(50), RGB_TO_NCURSES(200), RGB_TO_NCURSES(50));
         if (err == ERR) {
             useFallback = true;
         }
@@ -49,12 +57,12 @@ std::map<std::string, Theme::Colorscheme> Theme::colorschemes = {
     {
         "default",
         {
-            {C_PRIMARY, {COLOR_BLACK, CUSTOM_PRIMARY_BLUE}},
-            {C_SECONDARY, {COLOR_WHITE, CUSTOM_SECONDARY_BLUE}},
-            {C_SECONDARY_IMPORTANT, {COLOR_RED, CUSTOM_SECONDARY_BLUE}},
-            {C_TERTIARY, {COLOR_WHITE, CUSTOM_TERTIARY_BLUE}},
-            {C_TERTIARY_CURSOR, {COLOR_BLUE, CUSTOM_TERTIARY_BLUE}},
-            {C_TERTIARY_MARKER, {COLOR_GREEN, CUSTOM_TERTIARY_BLUE}},
+            {C_PRIMARY, {CUSTOM_BLACK, CUSTOM_PRIMARY_BLUE}},
+            {C_SECONDARY, {CUSTOM_WHITE, CUSTOM_SECONDARY_BLUE}},
+            {C_SECONDARY_IMPORTANT, {CUSTOM_RED, CUSTOM_SECONDARY_BLUE}},
+            {C_TERTIARY, {CUSTOM_WHITE, CUSTOM_TERTIARY_BLUE}},
+            {C_TERTIARY_CURSOR, {CUSTOM_PRIMARY_BLUE, CUSTOM_TERTIARY_BLUE}},
+            {C_TERTIARY_MARKER, {CUSTOM_GREEN, CUSTOM_TERTIARY_BLUE}},
         },
     },
     {
@@ -71,12 +79,12 @@ std::map<std::string, Theme::Colorscheme> Theme::colorschemes = {
     {
         "light",
         {
-            {C_PRIMARY, {COLOR_BLACK, CUSTOM_PRIMARY_BLUE}},
-            {C_SECONDARY, {COLOR_WHITE, CUSTOM_SECONDARY_BLUE}},
-            {C_SECONDARY_IMPORTANT, {COLOR_RED, CUSTOM_SECONDARY_BLUE}},
-            {C_TERTIARY, {CUSTOM_TERTIARY_BLUE, COLOR_WHITE}},
-            {C_TERTIARY_CURSOR, {COLOR_BLUE, COLOR_WHITE}},
-            {C_TERTIARY_MARKER, {COLOR_GREEN, COLOR_WHITE}},
+            {C_PRIMARY, {CUSTOM_BLACK, CUSTOM_PRIMARY_BLUE}},
+            {C_SECONDARY, {CUSTOM_WHITE, CUSTOM_SECONDARY_BLUE}},
+            {C_SECONDARY_IMPORTANT, {CUSTOM_RED, CUSTOM_SECONDARY_BLUE}},
+            {C_TERTIARY, {CUSTOM_TERTIARY_BLUE, CUSTOM_WHITE}},
+            {C_TERTIARY_CURSOR, {CUSTOM_PRIMARY_BLUE, CUSTOM_WHITE}},
+            {C_TERTIARY_MARKER, {CUSTOM_GREEN, CUSTOM_WHITE}},
         },
     },
     {
