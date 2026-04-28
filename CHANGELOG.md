@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Theme selection menu
 - Theme options
 
+### Changed
+
+- Improved status line of editor
+
 ## [1.1.0] - 2026-04-21
 
 ### Added

@@ -11,19 +11,23 @@ void DefaultWindow::update() {
     wclear(m_win);
 
     // Status line
-    wattron(m_win, COLOR_PAIR(Theme::C_SECONDARY));
     wmove(m_win, m_y - 1, 0);
-    wprintw (m_win, "Editor (press \"?\" for help)");
-    if (changed()) {
-        waddch(m_win, '*' | COLOR_PAIR(Theme::C_SECONDARY_IMPORTANT));
+    if (m_eraser) {
+        wattron(m_win, COLOR_PAIR(Theme::C_PRIMARY));
+        wprintw(m_win, " [E] ");
     }
+    if (changed()) {
+        wattron(m_win, COLOR_PAIR(Theme::C_SECONDARY_IMPORTANT));
+        wprintw(m_win, " * ");
+    }
+    wattron(m_win, COLOR_PAIR(Theme::C_SECONDARY));
+    wprintw (m_win, " ?: help | o: overview | q: quit");
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
     int cursorY, cursorX;
     getyx(m_win, cursorY, cursorX);
 #pragma GCC diagnostic pop
-    std::string statusString = std::format(" {}{}:{} ",
-            m_eraser ? "[E] " : "",
+    std::string statusString = std::format(" {}:{} ",
             m_vcursorX + 1, m_vcursorY + 1);
     for (size_t i = 0; i < m_x - cursorX - statusString.size(); i++) {
         waddch(m_win, ' ');
