@@ -105,14 +105,14 @@ void Glyph::drawCircle(size_t x, size_t y, size_t radius, bool bit) {
     int pointX = radius;
     int pointY = 0;
     while (pointY <= pointX) {
-        setBit(x + pointX, y + pointY, true, false);
-        setBit(x - pointX, y - pointY, true, false);
-        setBit(x - pointX, y + pointY, true, false);
-        setBit(x + pointX, y - pointY, true, false);
-        setBit(x + pointY, y + pointX, true, false);
-        setBit(x - pointY, y - pointX, true, false);
-        setBit(x - pointY, y + pointX, true, false);
-        setBit(x + pointY, y - pointX, true, false);
+        setBit(x + pointX, y + pointY, bit, false);
+        setBit(x - pointX, y - pointY, bit, false);
+        setBit(x - pointX, y + pointY, bit, false);
+        setBit(x + pointX, y - pointY, bit, false);
+        setBit(x + pointY, y + pointX, bit, false);
+        setBit(x - pointY, y - pointX, bit, false);
+        setBit(x - pointY, y + pointX, bit, false);
+        setBit(x + pointY, y - pointX, bit, false);
         pointY++;
         t1 += pointY;
         int t2 = t1 - pointX;

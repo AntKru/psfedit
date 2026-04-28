@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved status line of editor
 
+### Fixed
+
+- Circles are now affected by eraser
+
 ## [1.1.0] - 2026-04-21
 
 ### Added
