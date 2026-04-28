@@ -27,7 +27,7 @@ void ThemeWindow::update() {
     wresize(m_win, std::min(m_y - 4, 18), m_x - 4);
     move_panel(m_panel, 2, 2);
     box(m_win, 0, 0);
-    mvwprintw(m_win, 0, 1, "Help");
+    mvwprintw(m_win, 0, 1, "Themes");
 }
 
 void ThemeWindow::handleKey(int key) {
