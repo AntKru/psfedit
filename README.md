@@ -5,19 +5,17 @@ A basic psf2 font editor and viewer.
 ## Screenshots
 
 ### CLI
-<img width="566" height="180" alt="image" src="https://github.com/user-attachments/assets/72de53fb-c8c5-4645-a099-89c4538e367c" />
-
-<img width="198" height="121" alt="image" src="https://github.com/user-attachments/assets/5ad2c5c8-2e02-4671-a6f7-e12b437d4d49" />
+<img width="1894" height="601" alt="image" src="https://github.com/user-attachments/assets/0ff1af1e-6260-4ec7-a507-340f079d8ccb" />
 
 ### Editor
 ### Main screen
-<img width="1897" height="951" alt="image" src="https://github.com/user-attachments/assets/c5a92c3d-a20b-473c-a632-450edc817cef" />
+<img width="1894" height="935" alt="image" src="https://github.com/user-attachments/assets/b2f1ed0f-ae42-4d20-8cb7-d70ce8437f50" />
 
 ### Help Window
-<img width="1884" height="500" alt="image" src="https://github.com/user-attachments/assets/1aefdc4a-7020-4821-995f-75355e7ea21c" />
+<img width="1894" height="935" alt="image" src="https://github.com/user-attachments/assets/18ec7b46-19f6-48ea-9954-7726a5c88dc7" />
 
 ### Overview screen
-<img width="1884" height="887" alt="image" src="https://github.com/user-attachments/assets/d18fa420-ade9-4b88-b800-dade9b3dd6a4" />
+<img width="1894" height="935" alt="image" src="https://github.com/user-attachments/assets/7405f1ba-1e8f-4e16-9a38-049857eb3c29" />
 
 ## Installation
  - [x86_64 Linux](#linux-users-on-x86_64)
