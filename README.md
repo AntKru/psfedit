@@ -17,6 +17,11 @@ A basic psf2 font editor and viewer.
 ### Overview screen
 <img width="1894" height="935" alt="image" src="https://github.com/user-attachments/assets/7405f1ba-1e8f-4e16-9a38-049857eb3c29" />
 
+### Themes
+<img width="231" height="161" alt="image" src="https://github.com/user-attachments/assets/1c6e1a8d-7184-4843-8739-22833e6fe23c" />
+<img width="231" height="161" alt="image" src="https://github.com/user-attachments/assets/8d61f17e-fda4-45b4-a328-25720d2aa2a0" />
+<img width="231" height="161" alt="image" src="https://github.com/user-attachments/assets/8f4a54de-eed7-4d3e-b051-9f8b2cdc303a" />
+
 ## Installation
  - [x86_64 Linux](#linux-users-on-x86_64)
  - [Other operating systems](#compile-it-yourself)
