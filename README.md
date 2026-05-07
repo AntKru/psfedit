@@ -2,6 +2,9 @@
 
 A basic psf2 font editor and viewer.
 
+> [!IMPORTANT]
+> This project has migrated to GitLab. You can find it [here](https://gitlab.com/AntKru/psfedit)
+
 ## Screenshots
 
 ### CLI
